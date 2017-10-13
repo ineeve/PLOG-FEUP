@@ -1,5 +1,6 @@
 /* -*- Mode:Prolog; coding:iso-8859-1; indent-tabs-mode:nil; prolog-indent-width:8; prolog-paren-indent:3; tab-width:8; -*- */
 
+:- use_module(library(lists)).
 
 boardMember([mid,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9]).
 
@@ -59,8 +60,12 @@ pontosY([H|T],P) :- pontosY(T,P), (member(H,boardY) -> P is P + 3; P is P + 1).
 pontos(Player,Pontos) :- (Player == b -> pecasB(X), pontosB(X,Pontos); pecasY(X),pontosY(X,Pontos)).
 
 isConnected(X,Y) :- boardMember(B), member(X,B), member(Y,B), (connected(X,L), member(Y,L)) ; (connected(Y,L), member(X,L)).
+removePiece(P) :- (pecasB(B),member(P,B) -> delete(B, P, B); pecasY(Y), delete(Y, P, Y)).
 
-displaySingleP(P) :-(pecasY(Y), member(P,Y) -> write(y); pecasB(B), member(P,B) -> write(b); write(e)), write(' ').
+
+displaySingleP(P) :- pecasY(Y), member(P,Y), write(y), write(' '). 
+displaySingleP(P) :- pecasB(B), member(P,B), write(b), write(' ').
+displaySingleP(_) :- write(e), write(' ').
 displayPos([H|T]) :- displaySingleP(H), displayPos(T).
 displayPos([]).
 displayLine(1) :- write('   '),displayPos([g9,g8,g7,g6]),nl.
