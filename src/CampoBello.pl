@@ -121,27 +121,27 @@ isValid(b,Yi,Bi,PInicial,PJump,PFinal) :-
 
         
         
-move(Yi,Bi,PosI,PosJ,PosF,Yo,Bo) :-
-        member(PosI,Yi),
-        delete(Yi,PosI,Yo2),
-        append([PosF],Yo2,Yo3),
-        delete(Yo3,PosJ,Yo),
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+        member(InitialPos,Yi),
+        delete(Yi,InitialPos,Yo2),
+        append([FinalPos],Yo2,Yo3),
+        delete(Yo3,JumpPos,Yo),
         append([],Bi,Bo).
 
 
-move(Yi,Bi,PosI,PosJ,PosF,Yo,Bo) :-
-        member(PosI,Bi),
-        delete(Bi,PosI,Bo2),
-        append([PosF],Bo2,Bo3),
-        delete(Bo3,PosJ,Bo),
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+        member(InitialPos,Bi),
+        delete(Bi,InitialPos,Bo2),
+        append([FinalPos],Bo2,Bo3),
+        delete(Bo3,JumpPos,Bo),
         append([],Yi,Yo).
 
-makePlay(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
-        isValid(Player,Yi,Bi,PosI,PosJump,PosF),
-        move(Yi,Bi,PosI,PosJump,PosF,Yo,Bo).
+makePlay(Player,Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :- 
+        isValid(Player,Yi,Bi,InitialPos,JumpPos,FinalPos),
+        move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo).
 
-makePlay(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
-        \+ isValid(Player,Yi,Bi,PosI,PosJump,PosF),
+makePlay(Player,Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :- 
+        \+ isValid(Player,Yi,Bi,InitialPos,JumpPos,FinalPos),
         write('Invalid Move, try again'),nl,
         append([],Yi,Yo),
         append([],Bi,Bo).
@@ -150,9 +150,9 @@ game(Yi,Bi) :-
         displayBoard(Yi,Bi),
         write('player (y or b)'),
         read(Player),
-        write(' posInicial, posJump, posFinal'),
-        read(PosInicial), read(PosJump), read(PosFinal),
-        makePlay(Player,Yi,Bi,PosInicial, PosJump, PosFinal,Yo,Bo),
+        write(' initialPos, jumpPos, finalPos'),
+        read(InitialPos), read(JumpPos), read(FinalPos),
+        makePlay(Player,Yi,Bi,InitialPos, JumpPos, FinalPos,Yo,Bo),
         game(Yo,Bo).
 game([],_).
 game(_,[]).
