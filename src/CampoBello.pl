@@ -77,7 +77,7 @@ displaySingleP(_,_,_) :- write(e), write(' ').
 displayPos([H|T],PiecesY,PiecesB) :- displaySingleP(H,PiecesY,PiecesB), displayPos(T,PiecesY,PiecesB).
 displayPos([],_,_).
 displayLine(1,PiecesY,PiecesB) :- write('   '),displayPos([g9,g8,g7,g6],PiecesY,PiecesB),nl.
-displayLine(2,PiecesY,PiecesB) :- displaySingleP(b6,PiecesY,PiecesB), write('  '), displayPos([g5,g4,g3],pecasY,pecasB), write('  '), displaySingleP(r9,pecasY,pecasB),nl.
+displayLine(2,PiecesY,PiecesB) :- displaySingleP(b6,PiecesY,PiecesB), write('  '), displayPos([g5,g4,g3],PiecesY,PiecesB), write('  '), displaySingleP(r9,PiecesY,PiecesB),nl.
 displayLine(3,PiecesY,PiecesB) :- write(' '), displaySingleP(b3,PiecesY,PiecesB), write('  '), displayPos([g2,g1],PiecesY,PiecesB), write('  '), displaySingleP(r5,PiecesY,PiecesB),nl.
 displayLine(4,PiecesY,PiecesB) :- displayPos([b7,b1],PiecesY,PiecesB), write('  '), displaySingleP(g0,PiecesY,PiecesB), write('  '),displayPos([r2,r8],PiecesY,PiecesB), nl.
 displayLine(5,PiecesY,PiecesB) :- write(' '), displaySingleP(b4,PiecesY,PiecesB), write(' '), displayPos([b0,mid,r0],PiecesY,PiecesB),write(' '),displaySingleP(r4,PiecesY,PiecesB),nl.
@@ -117,18 +117,20 @@ isValid(b,Yi,Bi,PInicial,PJump,PFinal) :-
 
         
         
-move(Yi,_,PosI,PosJ,PosF,Yo,_) :-
+move(Yi,Bi,PosI,PosJ,PosF,Yo,Bo) :-
         member(PosI,Yi),
         delete(Yi,PosI,Yo2),
-        append(Yo2,PosF,Yo3),
-        delete(Yo3,PosJ,Yo).
+        append([PosF],Yo2,Yo3),
+        delete(Yo3,PosJ,Yo),
+        append([],Bi,Bo).
 
 
-move(_,Bi,PosI,PosJ,PosF,_,Bo) :-
+move(Yi,Bi,PosI,PosJ,PosF,Yo,Bo) :-
         member(PosI,Bi),
         delete(Bi,PosI,Bo2),
-        append(Bo2,PosF,Bo3),
-        delete(Bo3,PosJ,Bo).
+        append([PosF],Bo2,Bo3),
+        delete(Bo3,PosJ,Bo),
+        append([],Yi,Yo).
 
 jogada(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
         isValid(Player,Yi,Bi,PosI,PosJump,PosF),
