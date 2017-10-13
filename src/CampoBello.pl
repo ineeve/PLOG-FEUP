@@ -71,73 +71,73 @@ isConnected(X,Y) :- boardMember(B), member(X,B), member(Y,B), (connected(X,L), m
 removePiece(P) :- (pecasB(B),member(P,B) -> delete(B, P, B); pecasY(Y), delete(Y, P, Y)).
 
 
-displaySingleP(P, pecasY, _) :- pecasY(Y), member(P,Y), write(y), write(' '). 
-displaySingleP(P, _, pecasB) :- pecasB(B), member(P,B), write(b), write(' ').
+displaySingleP(P, PiecesY, _) :- member(P,PiecesY), write(y), write(' '). 
+displaySingleP(P, _, PiecesB) :- member(P,PiecesB), write(b), write(' ').
 displaySingleP(_,_,_) :- write(e), write(' ').
-displayPos([H|T],pecasY,pecasB) :- displaySingleP(H,pecasY,pecasB), displayPos(T,pecasY,pecasB).
+displayPos([H|T],PiecesY,PiecesB) :- displaySingleP(H,PiecesY,PiecesB), displayPos(T,PiecesY,PiecesB).
 displayPos([],_,_).
-displayLine(1,pecasY,pecasB) :- write('   '),displayPos([g9,g8,g7,g6],pecasY,pecasB),nl.
-displayLine(2,pecasY,pecasB) :- displaySingleP(b6,pecasY,pecasB), write('  '), displayPos([g5,g4,g3],pecasY,pecasB), write('  '), displaySingleP(r9,pecasY,pecasB),nl.
-displayLine(3,pecasY,pecasB) :- write(' '), displaySingleP(b3,pecasY,pecasB), write('  '), displayPos([g2,g1],pecasY,pecasB), write('  '), displaySingleP(r5,pecasY,pecasB),nl.
-displayLine(4,pecasY,pecasB) :- displayPos([b7,b1],pecasY,pecasB), write('  '), displaySingleP(g0,pecasY,pecasB), write('  '),displayPos([r2,r8],pecasY,pecasB), nl.
-displayLine(5,pecasY,pecasB) :- write(' '), displaySingleP(b4,pecasY,pecasB), write(' '), displayPos([b0,mid,r0],pecasY,pecasB),write(' '),displaySingleP(r4,pecasY,pecasB),nl.
-displayLine(6,pecasY,pecasB) :- displayPos([b8,b2],pecasY,pecasB), write('  '), displaySingleP(y0,pecasY,pecasB), write('  '),displayPos([r1,r7],pecasY,pecasB), nl.
-displayLine(7,pecasY,pecasB) :- write(' '), displaySingleP(b5,pecasY,pecasB), write('  '), displayPos([g1,g2],pecasY,pecasB), write('  '), displaySingleP(r6,pecasY,pecasB),nl.
-displayLine(8,pecasY,pecasB) :- displaySingleP(b9,pecasY,pecasB), write('  '), displayPos([y3,y4,y5],pecasY,pecasB), write('  '), displaySingleP(r6,pecasY,pecasB),nl.
-displayLine(9,pecasY,pecasB) :- write('   '),displayPos([y6,y7,y8,y9],pecasY,pecasB),nl.
-displayBoard(pecasY,pecasB) :- 
-        displayLine(1,pecasY,pecasB),
-        displayLine(2,pecasY,pecasB), 
-        displayLine(3,pecasY,pecasB), 
-        displayLine(4,pecasY,pecasB),
-        displayLine(5,pecasY,pecasB),
-        displayLine(6,pecasY,pecasB),
-        displayLine(7,pecasY,pecasB),
-        displayLine(8,pecasY,pecasB),
-        displayLine(9,pecasY,pecasB).
+displayLine(1,PiecesY,PiecesB) :- write('   '),displayPos([g9,g8,g7,g6],PiecesY,PiecesB),nl.
+displayLine(2,PiecesY,PiecesB) :- displaySingleP(b6,PiecesY,PiecesB), write('  '), displayPos([g5,g4,g3],pecasY,pecasB), write('  '), displaySingleP(r9,pecasY,pecasB),nl.
+displayLine(3,PiecesY,PiecesB) :- write(' '), displaySingleP(b3,PiecesY,PiecesB), write('  '), displayPos([g2,g1],PiecesY,PiecesB), write('  '), displaySingleP(r5,PiecesY,PiecesB),nl.
+displayLine(4,PiecesY,PiecesB) :- displayPos([b7,b1],PiecesY,PiecesB), write('  '), displaySingleP(g0,PiecesY,PiecesB), write('  '),displayPos([r2,r8],PiecesY,PiecesB), nl.
+displayLine(5,PiecesY,PiecesB) :- write(' '), displaySingleP(b4,PiecesY,PiecesB), write(' '), displayPos([b0,mid,r0],PiecesY,PiecesB),write(' '),displaySingleP(r4,PiecesY,PiecesB),nl.
+displayLine(6,PiecesY,PiecesB) :- displayPos([b8,b2],PiecesY,PiecesB), write('  '), displaySingleP(y0,PiecesY,PiecesB), write('  '),displayPos([r1,r7],PiecesY,PiecesB), nl.
+displayLine(7,PiecesY,PiecesB) :- write(' '), displaySingleP(b5,PiecesY,PiecesB), write('  '), displayPos([g1,g2],PiecesY,PiecesB), write('  '), displaySingleP(r6,PiecesY,PiecesB),nl.
+displayLine(8,PiecesY,PiecesB) :- displaySingleP(b9,PiecesY,PiecesB), write('  '), displayPos([y3,y4,y5],PiecesY,PiecesB), write('  '), displaySingleP(r6,PiecesY,PiecesB),nl.
+displayLine(9,PiecesY,PiecesB) :- write('   '),displayPos([y6,y7,y8,y9],PiecesY,PiecesB),nl.
+displayBoard(Y,B) :- 
+        displayLine(1,Y,B),
+        displayLine(2,Y,B), 
+        displayLine(3,Y,B), 
+        displayLine(4,Y,B),
+        displayLine(5,Y,B),
+        displayLine(6,Y,B),
+        displayLine(7,Y,B),
+        displayLine(8,Y,B),
+        displayLine(9,Y,B).
 
 
 
-isValid(y,Yi,Bi,posInicial,posJump,posFinal) :-
-        posInicial \= posFinal,
-        posInicial \= posJump,
-        member(posInicial,Yi),
-        \+ member(posFinal,Yi),
-        \+ member(posFinal,Bi),
-        (member(posJump,Bi) ; member(posJump,Yi)).
+isValid(y,Yi,Bi,PInicial,PJump,PFinal) :-
+        PInicial \= PFinal,
+        PInicial \= PJump,
+        member(PInicial,Yi),
+        \+ member(PFinal,Yi),
+        \+ member(PFinal,Bi),
+        (member(PJump,Bi) ; member(PJump,Yi)).
         
 
-isValid(b,Yi,Bi,posInicial,posJump,posFinal) :- 
-        posInicial \= posFinal,
-        posInicial \= posJump,
-        member(posInicial,Bi),
-        \+ member(posFinal,Yi),
-        \+ member(posFinal,Bi),
-        (member(posJump,Bi) ; member(posJump,Yi)).
+isValid(b,Yi,Bi,PInicial,PJump,PFinal) :- 
+        PInicial \= PFinal,
+        PInicial \= PJump,
+        member(PInicial,Bi),
+        \+ member(PFinal,Yi),
+        \+ member(PFinal,Bi),
+        (member(PJump,Bi) ; member(PJump,Yi)).
 
         
         
-move(Yi,_,posI,posJ,posF,Yo,_) :-
-        member(posI,Yi),
-        delete(Yi,posI,Yo2),
-        append(Yo2,posF,Yo).
+move(Yi,_,PosI,posJ,PosF,Yo,_) :-
+        member(PosI,Yi),
+        delete(Yi,PosI,Yo2),
+        append(Yo2,PosF,Yo).
 
-move(_,Bi,posI,posJ,posF,_,Bo) :-
-        member(posI,Bi),
-        delete(Bi,posI,Bo2),
-        append(Bo2,posF,Bo).
+move(_,Bi,PosI,posJ,PosF,_,Bo) :-
+        member(PosI,Bi),
+        delete(Bi,PosI,Bo2),
+        append(Bo2,PosF,Bo).
 
-jogada(Player,Yi,Bi,posInicial,posJump,posFinal,Yo,Bo) :- 
-        isValid(Player,Yi,Bi,posInicial,posJump,posFinal),
-        move(Yi,Bi,posInicial,posJump,posFinal,Yo,Bo).
+jogada(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
+        isValid(Player,Yi,Bi,PosI,PosJump,PosF),
+        move(Yi,Bi,PosI,PosJump,PosF,Yo,Bo).
 
 jogo(Yi,Bi) :- 
         displayBoard(Yi,Bi),
         write('player (y or b)'),
         read(Player),
         write(' posInicial, posJump, posFinal'),
-        read(posInicial), read(posJump), read(posFinal),
-        jogada(Player,Yi,Bi,posInicial, posJump, posFinal,Yo,Bo),
+        read(PosInicial), read(PosJump), read(PosFinal),
+        jogada(Player,Yi,Bi,PosInicial, PosJump, PosFinal,Yo,Bo),
         jogo(Yo,Bo).
 jogo([],_).
 jogo(_,[]).
