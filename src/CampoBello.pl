@@ -52,12 +52,20 @@ boardY([y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
                                                                      
 
 pontosB([],0).
-pontosB([H|T],P) :- pontosB(T,P), (member(H,boardB) -> P is P + 3; P is P + 1).
+pontosB([H|T],P) :- pontosB(T,P1), boardB(B), member(H,B), P is P1 + 3.
+pontosB([H|T],P) :- pontosB(T,P1), (boardY(Y), member(H,Y); H==mid), P is P1 + 1.
 
 pontosY([],0).
-pontosY([H|T],P) :- pontosY(T,P), (member(H,boardY) -> P is P + 3; P is P + 1).
+pontosY([H|T],P) :- pontosY(T,P1), boardY(Y), member(H,Y), P is P1 + 3.
+pontosY([H|T],P) :- pontosY(T,P1), (H==mid; boardB(B), member(H,B)), P is P1 + 1.
 
-pontos(Player,Pontos) :- (Player == b -> pecasB(X), pontosB(X,Pontos); pecasY(X),pontosY(X,Pontos)).
+pontos(Player,Pontos) :- Player == b, pecasB(X), pontosB(X,Pontos).
+pontos(Player,Pontos) :- Player == y, pecasY(X), pontosY(X,Pontos).
+
+winner :- pontos(b,P1), pontos(y,P2), whoWins(P1,P2).
+whoWins(P1,P2) :- P1 > P2, write('Blue Player Wins').
+whoWins(P1,P2) :- P1 < P2, write('Yellow Player Wins').
+whoWins(P1,P2) :- P1 == P2, write('Draw').
 
 isConnected(X,Y) :- boardMember(B), member(X,B), member(Y,B), (connected(X,L), member(Y,L)) ; (connected(Y,L), member(X,L)).
 removePiece(P) :- (pecasB(B),member(P,B) -> delete(B, P, B); pecasY(Y), delete(Y, P, Y)).
