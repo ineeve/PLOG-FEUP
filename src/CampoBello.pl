@@ -117,15 +117,18 @@ isValid(b,Yi,Bi,PInicial,PJump,PFinal) :-
 
         
         
-move(Yi,_,PosI,posJ,PosF,Yo,_) :-
+move(Yi,_,PosI,PosJ,PosF,Yo,_) :-
         member(PosI,Yi),
         delete(Yi,PosI,Yo2),
-        append(Yo2,PosF,Yo).
+        append(Yo2,PosF,Yo3),
+        delete(Yo3,PosJ,Yo).
 
-move(_,Bi,PosI,posJ,PosF,_,Bo) :-
+
+move(_,Bi,PosI,PosJ,PosF,_,Bo) :-
         member(PosI,Bi),
         delete(Bi,PosI,Bo2),
-        append(Bo2,PosF,Bo).
+        append(Bo2,PosF,Bo3),
+        delete(Bo3,PosJ,Bo).
 
 jogada(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
         isValid(Player,Yi,Bi,PosI,PosJump,PosF),
