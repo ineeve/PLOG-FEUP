@@ -104,7 +104,9 @@ isValid(y,Yi,Bi,PInicial,PJump,PFinal) :-
         member(PInicial,Yi),
         \+ member(PFinal,Yi),
         \+ member(PFinal,Bi),
-        (member(PJump,Bi) ; member(PJump,Yi)).
+        (member(PJump,Bi) ; member(PJump,Yi)),
+        isConnected(PInicial,PJump),
+        isConnected(PJump,PFinal).
         
 
 isValid(b,Yi,Bi,PInicial,PJump,PFinal) :- 
@@ -113,7 +115,9 @@ isValid(b,Yi,Bi,PInicial,PJump,PFinal) :-
         member(PInicial,Bi),
         \+ member(PFinal,Yi),
         \+ member(PFinal,Bi),
-        (member(PJump,Bi) ; member(PJump,Yi)).
+        (member(PJump,Bi) ; member(PJump,Yi)),
+        isConnected(PInicial,PJump),
+        isConnected(PJump,PFinal).
 
         
         
@@ -135,6 +139,12 @@ move(Yi,Bi,PosI,PosJ,PosF,Yo,Bo) :-
 jogada(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
         isValid(Player,Yi,Bi,PosI,PosJump,PosF),
         move(Yi,Bi,PosI,PosJump,PosF,Yo,Bo).
+
+jogada(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
+        \+ isValid(Player,Yi,Bi,PosI,PosJump,PosF),
+        write('Invalid Move, try again'),nl,
+        append([],Yi,Yo),
+        append([],Bi,Bo).
 
 jogo(Yi,Bi) :- 
         displayBoard(Yi,Bi),
