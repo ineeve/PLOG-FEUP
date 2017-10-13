@@ -44,31 +44,31 @@ connected(y6,[y7]).
 connected(y7,[y8]).
 connected(y8,[y9]).
 
-pecasB([r1,r2,r3,r4,r5,r6,r7,r8,r9,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
-pecasY([y1,y2,y3,y4,y5,y6,y7,y8,y9,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
+blueMoversPos([r1,r2,r3,r4,r5,r6,r7,r8,r9,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
+yellowMoversPos([y1,y2,y3,y4,y5,y6,y7,y8,y9,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
 
-boardB([r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
-boardY([y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
+blueArea([r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
+yellowArea([y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
                                                                      
 
-pontosB([],0).
-pontosB([H|T],P) :- pontosB(T,P1), boardB(B), member(H,B), P is P1 + 3.
-pontosB([H|T],P) :- pontosB(T,P1), (boardY(Y), member(H,Y); H==mid), P is P1 + 1.
+bluePlayerPoints([],0).
+bluePlayerPoints([H|T],P) :- bluePlayerPoints(T,P1), blueArea(B), member(H,B), P is P1 + 3.
+bluePlayerPoints([H|T],P) :- bluePlayerPoints(T,P1), (yellowArea(Y), member(H,Y); H==mid), P is P1 + 1.
 
-pontosY([],0).
-pontosY([H|T],P) :- pontosY(T,P1), boardY(Y), member(H,Y), P is P1 + 3.
-pontosY([H|T],P) :- pontosY(T,P1), (H==mid; boardB(B), member(H,B)), P is P1 + 1.
+yellowPlayerPoints([],0).
+yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), yellowArea(Y), member(H,Y), P is P1 + 3.
+yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), (H==mid; blueArea(B), member(H,B)), P is P1 + 1.
 
-pontos(Player,Pontos) :- Player == b, pecasB(X), pontosB(X,Pontos).
-pontos(Player,Pontos) :- Player == y, pecasY(X), pontosY(X,Pontos).
+points(Player,Points) :- Player == b, blueMoversPos(X), bluePlayerPoints(X,Points).
+points(Player,Points) :- Player == y, yellowMoversPos(X), yellowPlayerPoints(X,Points).
 
-winner :- pontos(b,P1), pontos(y,P2), whoWins(P1,P2).
+winner :- points(b,P1), points(y,P2), whoWins(P1,P2).
 whoWins(P1,P2) :- P1 > P2, write('Blue Player Wins').
 whoWins(P1,P2) :- P1 < P2, write('Yellow Player Wins').
 whoWins(P1,P2) :- P1 == P2, write('Draw').
 
 isConnected(X,Y) :- boardMember(B), member(X,B), member(Y,B), (connected(X,L), member(Y,L)) ; (connected(Y,L), member(X,L)).
-removePiece(P) :- (pecasB(B),member(P,B) -> delete(B, P, B); pecasY(Y), delete(Y, P, Y)).
+removeMover(P) :- (blueMoversPos(B),member(P,B) -> delete(B, P, B); yellowMoversPos(Y), delete(Y, P, Y)).
 
 
 displaySingleP(P, PiecesY, _) :- member(P,PiecesY), write(y), write(' '). 
@@ -136,24 +136,24 @@ move(Yi,Bi,PosI,PosJ,PosF,Yo,Bo) :-
         delete(Bo3,PosJ,Bo),
         append([],Yi,Yo).
 
-jogada(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
+makePlay(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
         isValid(Player,Yi,Bi,PosI,PosJump,PosF),
         move(Yi,Bi,PosI,PosJump,PosF,Yo,Bo).
 
-jogada(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
+makePlay(Player,Yi,Bi,PosI,PosJump,PosF,Yo,Bo) :- 
         \+ isValid(Player,Yi,Bi,PosI,PosJump,PosF),
         write('Invalid Move, try again'),nl,
         append([],Yi,Yo),
         append([],Bi,Bo).
 
-jogo(Yi,Bi) :- 
+game(Yi,Bi) :- 
         displayBoard(Yi,Bi),
         write('player (y or b)'),
         read(Player),
         write(' posInicial, posJump, posFinal'),
         read(PosInicial), read(PosJump), read(PosFinal),
-        jogada(Player,Yi,Bi,PosInicial, PosJump, PosFinal,Yo,Bo),
-        jogo(Yo,Bo).
-jogo([],_).
-jogo(_,[]).
+        makePlay(Player,Yi,Bi,PosInicial, PosJump, PosFinal,Yo,Bo),
+        game(Yo,Bo).
+game([],_).
+game(_,[]).
 
