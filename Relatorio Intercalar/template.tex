@@ -98,8 +98,7 @@ http://www.campobellogame.com/
 
 %Descrever a forma de representação do estado do tabuleiro (tipicamente uma lista de listas), com exemplificação em Prolog de posições iniciais do jogo, posições intermédias e finais, acompanhadas de imagens ilustrativas.
 
-O estado do jogo é representado por 2 listas que identificam em que posições do tabuleiro estão as peças de cada jogador (1 lista para cada jogador).
-As peças de cada jogador sáo designadas em Inglês por "movers".\linebreak
+O estado do jogo é representado por 2 listas que identificam em que posições do tabuleiro estão as peças de cada jogador (1 lista para cada jogador). As peças de cada jogador sáo designadas em Inglês por "movers".\linebreak
 
 \includegraphics[scale=0.7]{gameStates.PNG}\linebreak\linebreak
 Imagens do tabuleiro nos respetivos estados de jogo (inicial, intermédio e final):\linebreak
@@ -126,7 +125,17 @@ O predicado para visualização do tabuleiro é muito específico, visto que cad
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Movimentos}
 
-Elencar os movimentos (tipos de jogadas) possíveis e definir os cabeçalhos dos predicados que serão utilizados (ainda não precisam de estar implementados).
+\begin{flushleft} 
+\hspace{5mm} \textbf{Fazer uma jogada:}\linebreak
+\textit {makePlay(Player,Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo)}\linebreak
+
+\hspace{5mm} \textbf{Verificar se é válida:}\linebreak
+\textit{isValid(Player,Yi,Bi,InitialPos,JumpPos,FinalPos)}\linebreak
+
+\hspace{5mm} \textbf{Mover a peça:}\linebreak
+\textit{move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo)}\linebreak
+\end{flushleft}
+
 
 
 \end{document}
