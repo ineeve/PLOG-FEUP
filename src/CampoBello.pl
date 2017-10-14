@@ -44,6 +44,16 @@ connected(y6,[y7]).
 connected(y7,[y8]).
 connected(y8,[y9]).
 
+
+blueMoversInitialPos([r1,r2,r3,r4,r5,r6,r7,r8,r9,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
+yellowMoversInitialPos([y1,y2,y3,y4,y5,y6,y7,y8,y9,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
+
+blueMoversMidGamePos([y1,r1,r5,r6,r7,r8,r9,b1,b5,b6,b7,mid]).
+yellowMoversMidGamePos([r3,y2,y4,y5,y8,y9,g1,g4,g7,g8,g9]).
+
+blueMoversFinalPos([]).
+yellowMoversFinalPos([y2,y8,y9,g1,g9]).
+
 blueMoversPos([r1,r2,r3,r4,r5,r6,r7,r8,r9,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
 yellowMoversPos([y1,y2,y3,y4,y5,y6,y7,y8,y9,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
 
@@ -74,16 +84,40 @@ removeMover(P) :- (blueMoversPos(B),member(P,B) -> delete(B, P, B); yellowMovers
 displaySingleP(P, PiecesY, _) :- member(P,PiecesY), write(y), write(' '). 
 displaySingleP(P, _, PiecesB) :- member(P,PiecesB), write(b), write(' ').
 displaySingleP(_,_,_) :- write(e), write(' ').
-displayPos([H|T],PiecesY,PiecesB) :- displaySingleP(H,PiecesY,PiecesB), displayPos(T,PiecesY,PiecesB).
+displayPos([H|T],PiecesY,PiecesB) :- displaySingleP(H,PiecesY,PiecesB),
+                                displayPos(T,PiecesY,PiecesB).
 displayPos([],_,_).
+
 displayLine(1,PiecesY,PiecesB) :- write('   '),displayPos([g9,g8,g7,g6],PiecesY,PiecesB),nl.
-displayLine(2,PiecesY,PiecesB) :- displaySingleP(b6,PiecesY,PiecesB), write('  '), displayPos([g5,g4,g3],PiecesY,PiecesB), write('  '), displaySingleP(r9,PiecesY,PiecesB),nl.
-displayLine(3,PiecesY,PiecesB) :- write(' '), displaySingleP(b3,PiecesY,PiecesB), write('  '), displayPos([g2,g1],PiecesY,PiecesB), write('  '), displaySingleP(r5,PiecesY,PiecesB),nl.
-displayLine(4,PiecesY,PiecesB) :- displayPos([b7,b1],PiecesY,PiecesB), write('  '), displaySingleP(g0,PiecesY,PiecesB), write('  '),displayPos([r2,r8],PiecesY,PiecesB), nl.
-displayLine(5,PiecesY,PiecesB) :- write(' '), displaySingleP(b4,PiecesY,PiecesB), write(' '), displayPos([b0,mid,r0],PiecesY,PiecesB),write(' '),displaySingleP(r4,PiecesY,PiecesB),nl.
-displayLine(6,PiecesY,PiecesB) :- displayPos([b8,b2],PiecesY,PiecesB), write('  '), displaySingleP(y0,PiecesY,PiecesB), write('  '),displayPos([r1,r7],PiecesY,PiecesB), nl.
-displayLine(7,PiecesY,PiecesB) :- write(' '), displaySingleP(b5,PiecesY,PiecesB), write('  '), displayPos([g1,g2],PiecesY,PiecesB), write('  '), displaySingleP(r6,PiecesY,PiecesB),nl.
-displayLine(8,PiecesY,PiecesB) :- displaySingleP(b9,PiecesY,PiecesB), write('  '), displayPos([y3,y4,y5],PiecesY,PiecesB), write('  '), displaySingleP(r6,PiecesY,PiecesB),nl.
+
+displayLine(2,PiecesY,PiecesB) :- displaySingleP(b6,PiecesY,PiecesB), write('  '),
+                                displayPos([g5,g4,g3],PiecesY,PiecesB), write('  '),
+                                displaySingleP(r9,PiecesY,PiecesB),nl.
+
+displayLine(3,PiecesY,PiecesB) :- write(' '), displaySingleP(b3,PiecesY,PiecesB), write('  '),
+                                displayPos([g2,g1],PiecesY,PiecesB), write('  '),
+                                displaySingleP(r5,PiecesY,PiecesB),nl.
+
+displayLine(4,PiecesY,PiecesB) :- displayPos([b7,b1],PiecesY,PiecesB), write('  '),
+                                displaySingleP(g0,PiecesY,PiecesB), write('  '),
+                                displayPos([r2,r8],PiecesY,PiecesB), nl.
+
+displayLine(5,PiecesY,PiecesB) :- write(' '), displaySingleP(b4,PiecesY,PiecesB),
+                                write(' '), displayPos([b0,mid,r0],PiecesY,PiecesB),
+                                write(' '),displaySingleP(r4,PiecesY,PiecesB),nl.
+
+displayLine(6,PiecesY,PiecesB) :- displayPos([b8,b2],PiecesY,PiecesB), write('  '),
+                                displaySingleP(y0,PiecesY,PiecesB), write('  '),
+                                displayPos([r1,r7],PiecesY,PiecesB), nl.
+
+displayLine(7,PiecesY,PiecesB) :- write(' '), displaySingleP(b5,PiecesY,PiecesB),
+                                write('  '), displayPos([g1,g2],PiecesY,PiecesB),
+                                write('  '), displaySingleP(r6,PiecesY,PiecesB),nl.
+                                
+displayLine(8,PiecesY,PiecesB) :- displaySingleP(b9,PiecesY,PiecesB), write('  '),
+                                displayPos([y3,y4,y5],PiecesY,PiecesB),
+                                write('  '), displaySingleP(r6,PiecesY,PiecesB),nl.
+
 displayLine(9,PiecesY,PiecesB) :- write('   '),displayPos([y6,y7,y8,y9],PiecesY,PiecesB),nl.
 displayBoard(Y,B) :- 
         displayLine(1,Y,B),
