@@ -81,6 +81,8 @@ yellowMoversPos([y1,y2,y3,y4,y5,y6,y7,y8,y9,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
 
 blueArea([r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
 yellowArea([y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9]).
+
+initialBoard(Y,B) :- blueMoversPos(B), yellowMoversPos(Y).
                                                                      
 
 bluePlayerPoints([],0).
@@ -163,7 +165,11 @@ isValid(y,Yi,Bi,InitialPos,JumpPos,FinalPos) :-
         validJump(InitialPos,FinalPos,JumpPos),
         ( member(JumpPos,Yi) ; member(JumpPos,Bi)).
 
-isEmpty(X,Yi,Bi):- \+ member(X,Yi), \+ member(X,Bi).
+isEmpty(X,Yi,Bi):- boardMember(X), \+ member(X,Yi), \+ member(X,Bi).
+getEmptyElement(Y,B,[BoardHead|_],Empty):- \+member(BoardHead,Y), \+member(BoardHead,B), Empty = BoardHead.
+getEmptyElement(Y,B,[_|BoardTail],Empty):- getEmptyElement(Y,B,BoardTail,Empty).
+
+getEmptyPositions(Y,B,EmptyPositions):- boardMember(Board), findall(X,(member(X,Board),\+member(X,Y),\+member(X,B)),EmptyPositions).
         
 % Yellow jumps yellow mover   
 move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
@@ -259,10 +265,11 @@ isGameOver(Yi,Bi) :-
         (validJump(H,FinalPos,JumpPos) ; validJump(FinalPos,H,JumpPos)).
 Game over for Blue */
 
-getAllPossivelMoves(_,[],_,_,_).
+getAllPossibleMoves(_,[],_,_,_).
 
 getAllPossibleMoves(y, [YHead|YTail],Yi, Bi, MOVES) :-        
         isValid(y,Yi,Bi,YHead, \+isEmpty(Mid,Yi,Bi), isEmpty(Final,Yi,Bi) ),
+        write('Move: '),write(YHead), write(' jump on '), write(Mid), write(' to '), write(Final),nl,
         getAllPossibleMoves(y,YTail,Yi,Bi,[[YHead,Final,Mid]|MOVES]).
         
         
@@ -298,6 +305,5 @@ start :-
                 read(MODE),nl,
                 validStartOption(MODE),
         !,
-        blueMoversPos(B),
-        yellowMoversPos(Y),
+        initialBoard(Y,B),
         game(Y,B,y).
