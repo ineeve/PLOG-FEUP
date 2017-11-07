@@ -63,8 +63,8 @@ validJump(g7,g9,g8).
 
 validJump(b0, r0, mid).
 validJump(y0, g0, mid).
-validJump(X,Y,Z):- validJump(Y,X,Z).
-
+validJump2(X,Y,Z):- validJump(X,Y,Z).
+validJump2(X,Y,Z):- validJump(Y,X,Z).
 
 /*
 blueMoversInitialPos([r1,r2,r3,r4,r5,r6,r7,r8,r9,b1,b2,b3,b4,b5,b6,b7,b8,b9]).
@@ -156,16 +156,20 @@ displayBoard(Y,B) :-
 
 isValid(b,Yi,Bi,InitialPos,JumpPos,FinalPos) :-
         member(InitialPos,Bi),
+        validJump2(InitialPos,FinalPos,JumpPos),
         isEmpty(FinalPos,Yi,Bi),
-        validJump(InitialPos,FinalPos,JumpPos),
-        (member(JumpPos,Yi) ; member(JumpPos,Bi)).
+        isNotEmpty(JumpPos, Yi,Bi).
 isValid(y,Yi,Bi,InitialPos,JumpPos,FinalPos) :-
-         member(InitialPos,Yi),
+        member(InitialPos,Yi),
+        validJump2(InitialPos,FinalPos,JumpPos),
         isEmpty(FinalPos,Yi,Bi),
-        validJump(InitialPos,FinalPos,JumpPos),
-        ( member(JumpPos,Yi) ; member(JumpPos,Bi)).
-
-isEmpty(X,Yi,Bi):- boardMember(X), \+ member(X,Yi), \+ member(X,Bi).
+        isNotEmpty(JumpPos, Yi,Bi).
+        
+        
+isNotEmpty(X,Yi,_):- boardMember(L),!, member(X,L), member(X,Yi).
+isNotEmpty(X,_,Bi):- boardMember(L),!, member(X,L), member(X,Bi).
+           
+isEmpty(X,Yi,Bi):- boardMember(L), !,member(X,L), \+ member(X,Yi), \+ member(X,Bi).
 getEmptyElement(Y,B,[BoardHead|_],Empty):- \+member(BoardHead,Y), \+member(BoardHead,B), Empty = BoardHead.
 getEmptyElement(Y,B,[_|BoardTail],Empty):- getEmptyElement(Y,B,BoardTail,Empty).
 
@@ -247,14 +251,14 @@ makePlay(_,Yi,Bi,_,_,Yo,Bo) :-
         append([],Bi,Bo).
 
 isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
-        validJump(PrevFinalPos,NextFinalPos,JumpPos),
+        validJump2(PrevFinalPos,NextFinalPos,JumpPos),
         \+ member(NextFinalPos,Yi),
         \+ member(NextFinalPos,Bi),
         (member(JumpPos,Yi); member(JumpPos,Bi)),
         NextFinalPos \= FirstInitialPos.
 
 isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
-        validJump(NextFinalPos,PrevFinalPos,JumpPos),
+        validJump2(NextFinalPos,PrevFinalPos,JumpPos),
         \+ member(NextFinalPos,Yi),
         \+ member(NextFinalPos,Bi),
         (member(JumpPos,Yi); member(JumpPos,Bi)),
@@ -265,14 +269,17 @@ isGameOver(Yi,Bi) :-
         (validJump(H,FinalPos,JumpPos) ; validJump(FinalPos,H,JumpPos)).
 Game over for Blue */
 
-getAllPossibleMoves(_,[],_,_,_).
 
-getAllPossibleMoves(y, [YHead|YTail],Yi, Bi, MOVES) :-        
-        isValid(y,Yi,Bi,YHead, \+isEmpty(Mid,Yi,Bi), isEmpty(Final,Yi,Bi) ),
+getAllPossibleMoves(_,[],_,_,[]).
+getAllPossibleMoves(y, [YHead|YTail],Yi, Bi, Moves) :-
+        isValid(y,Yi,Bi,YHead, Mid, Final),
         write('Move: '),write(YHead), write(' jump on '), write(Mid), write(' to '), write(Final),nl,
-        getAllPossibleMoves(y,YTail,Yi,Bi,[[YHead,Final,Mid]|MOVES]).
+        getAllPossibleMoves(y,YTail,Yi,Bi,[[YHead,Final,Mid]|Moves]).
         
-        
+getAllPossibleMoves(y,[_|YTail],Yi,Bi,Moves):- getAllPossibleMoves(y,YTail,Yi,Bi,Moves).
+
+
+
 game(Yi,Bi,y) :- 
         displayBoard(Yi,Bi),
         write('Yellow turn'),nl,
