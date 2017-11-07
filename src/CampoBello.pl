@@ -4,6 +4,7 @@
 
 boardMember([mid,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9]).
 
+
 validJump(mid,b1,b0).
 validJump(mid,b2,b0).
 validJump(b0,y2,y0).
@@ -62,6 +63,7 @@ validJump(g7,g9,g8).
 
 validJump(b0, r0, mid).
 validJump(y0, g0, mid).
+validJump(X,Y,Z):- validJump(Y,X,Z).
 
 
 /*
@@ -152,16 +154,16 @@ displayBoard(Y,B) :-
 
 isValid(b,Yi,Bi,InitialPos,JumpPos,FinalPos) :-
         member(InitialPos,Bi),
-        \+ member(FinalPos,Yi),
-        \+ member(FinalPos,Bi),
-        ( validJump(InitialPos,FinalPos,JumpPos) ; validJump(FinalPos,InitialPos,JumpPos) ),
-        ( member(JumpPos,Yi) ; member(JumpPos,Bi)).
+        isEmpty(FinalPos,Yi,Bi),
+        validJump(InitialPos,FinalPos,JumpPos),
+        (member(JumpPos,Yi) ; member(JumpPos,Bi)).
 isValid(y,Yi,Bi,InitialPos,JumpPos,FinalPos) :-
          member(InitialPos,Yi),
-        \+ member(FinalPos,Yi),
-        \+ member(FinalPos,Bi),
-        ( validJump(InitialPos,FinalPos,JumpPos) ; validJump(FinalPos,InitialPos,JumpPos) ),
+        isEmpty(FinalPos,Yi,Bi),
+        validJump(InitialPos,FinalPos,JumpPos),
         ( member(JumpPos,Yi) ; member(JumpPos,Bi)).
+
+isEmpty(X,Yi,Bi):- \+ member(X,Yi), \+ member(X,Bi).
         
 % Yellow jumps yellow mover   
 move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
@@ -252,13 +254,18 @@ isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
         (member(JumpPos,Yi); member(JumpPos,Bi)),
         NextFinalPos \= FirstInitialPos.
 
+/* Game over for Yellow
+isGameOver(Yi,Bi) :-
+        (validJump(H,FinalPos,JumpPos) ; validJump(FinalPos,H,JumpPos)).
+Game over for Blue */
 
-isNotGameOver(Yi,Bi,[H|T]) :-
-        (validJump(H,FinalPos,JumpPos) ; validJump(FinalPos,H,JumpPos)),
-        isNotGameOver(T).
+getAllPossivelMoves(_,[],_,_,_).
 
+getAllPossibleMoves(y, [YHead|YTail],Yi, Bi, MOVES) :-        
+        isValid(y,Yi,Bi,YHead, \+isEmpty(Mid,Yi,Bi), isEmpty(Final,Yi,Bi) ),
+        getAllPossibleMoves(y,YTail,Yi,Bi,[[YHead,Final,Mid]|MOVES]).
         
-
+        
 game(Yi,Bi,y) :- 
         displayBoard(Yi,Bi),
         write('Yellow turn'),nl,
@@ -277,3 +284,20 @@ game(Yi,Bi,b) :-
 game([],_).
 game(_,[]).
 
+validStartOption(MODE) :- integer(MODE), MODE > 0, MODE < 4.
+
+start :-
+        write('-------------------------'),nl,
+        write('----------MENU-----------'),nl,
+        write('-- 1.Player vs Player ---'),nl,
+        write('-- 2.Player vs PC -------'),nl,
+        write('-- 3.PC vs PC -----------'),nl,
+        write('-------------------------'),nl,
+        repeat,
+                write('Insert Valid Option: '),
+                read(MODE),nl,
+                validStartOption(MODE),
+        !,
+        blueMoversPos(B),
+        yellowMoversPos(Y),
+        game(Y,B,y).
