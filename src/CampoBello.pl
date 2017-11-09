@@ -93,10 +93,10 @@ yellowPlayerPoints([],0).
 yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), yellowArea(Y), member(H,Y), P is P1 + 3.
 yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), (H==mid; blueArea(B), member(H,B)), P is P1 + 1.
 
-points(Player,Points) :- Player == b, blueMoversPos(X), bluePlayerPoints(X,Points).
-points(Player,Points) :- Player == y, yellowMoversPos(X), yellowPlayerPoints(X,Points).
+points(b,BlueMoversPos,Points) :- bluePlayerPoints(BlueMoversPos,Points).
+points(y,YellowMoversPos,Points) :- yellowPlayerPoints(YellowMoversPos,Points).
 
-winner :- points(b,P1), points(y,P2), whoWins(P1,P2).
+winner(BlueMovers,YellowMovers) :- points(b,BlueMovers,P1), points(y,YellowMovers,P2), whoWins(P1,P2).
 whoWins(P1,P2) :- P1 > P2, write('Blue Player Wins').
 whoWins(P1,P2) :- P1 < P2, write('Yellow Player Wins').
 whoWins(P1,P2) :- P1 == P2, write('Draw').
@@ -273,21 +273,37 @@ isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
         (member(JumpPos,Yi); member(JumpPos,Bi)),
         NextFinalPos \= FirstInitialPos.
 
-/* Game over for Yellow
-isGameOver(Yi,Bi) :-
-        (validJump(H,FinalPos,JumpPos) ; validJump(FinalPos,H,JumpPos)).
-Game over for Blue */
+isGameOver(YellowMovers,BlueMovers):-
+        getAllPossibleMoves(y,YellowMovers,BlueMovers,Moves),!,
+        list_empty(Moves,Result),
+        Result == true.
+isGameOver(YellowMovers,BlueMovers):-
+        getAllPossibleMoves(b,YellowMovers,BlueMovers,Moves),!,
+        list_empty(Moves,Result),
+        Result == true.
 
+list_empty([], true).
+list_empty([_|_], false).
 
-getAllPossibleMoves(_,[],_,_,[]).
-getAllPossibleMoves(y, [YHead|YTail],Yi, Bi, Moves) :-
+getAllPossibleMovesAux(_,[],_,_,Moves,Moves) :- !.
+getAllPossibleMovesAux(y, [YHead|YTail],Yi, Bi, CalcMoves, Moves) :-
         isValid(y,Yi,Bi,YHead, Mid, Final),
-        write('Move: '),write(YHead), write(' jump on '), write(Mid), write(' to '), write(Final),nl,
-        getAllPossibleMoves(y,YTail,Yi,Bi,[[YHead,Final,Mid]|Moves]).
+        getAllPossibleMovesAux(y,YTail,Yi,Bi,[[YHead,Final,Mid]|CalcMoves], Moves).
+
+getAllPossibleMovesAux(b,[BHead|BTail],Bi,Yi,CalcMoves,Moves):-
+        isValid(b,Yi,Bi,BHead,Mid,Final),
+        getAllPossibleMovesAux(b,BTail,Bi,Yi,[[BHead,Final,Mid]|CalcMoves],Moves).
         
-getAllPossibleMoves(y,[_|YTail],Yi,Bi,Moves):- getAllPossibleMoves(y,YTail,Yi,Bi,Moves).
+/* Use when previous condition fails*/        
+getAllPossibleMovesAux(y,[_|YTail],Yi,Bi,CalcMoves,Moves):- getAllPossibleMovesAux(y,YTail,Yi,Bi,CalcMoves,Moves).
 
+getAllPossibleMovesAux(b,[_,BTail],Bi,Yi,CalcMoves,Moves):- getAllPossibleMovesAux(b,BTail,Bi,Yi,CalcMoves,Moves).
 
+getAllPossibleMoves(y,Y,B,Moves):-
+        getAllPossibleMovesAux(y,Y,Y,B,[],Moves).
+        
+getAllPossibleMoves(b,Y,B,Moves):-
+        getAllPossibleMovesAux(b,B,B,Y,[],Moves).
 
 game(Yi,Bi,y) :- 
         displayBoard(Yi,Bi),
