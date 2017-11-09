@@ -2,7 +2,7 @@
 
 :- use_module(library(lists)).
 
-boardMember([mid,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9]).
+boardMembers([mid,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,g0,g1,g2,g3,g4,g5,g6,g7,g8,g9,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9]).
 
 
 validJump(mid,b1,b0).
@@ -175,14 +175,13 @@ isValid(y,Yi,Bi,InitialPos,JumpPos,FinalPos) :-
         isNotEmpty(JumpPos, Yi,Bi).
         
         
-isNotEmpty(X,Yi,_):- boardMember(L),!, member(X,L), member(X,Yi).
-isNotEmpty(X,_,Bi):- boardMember(L),!, member(X,L), member(X,Bi).
+isNotEmpty(X,Yi,Bi):- boardMembers(L),!, member(X,L), (member(X,Yi) ; member(X,Bi)).
            
-isEmpty(X,Yi,Bi):- boardMember(L), !,member(X,L), \+ member(X,Yi), \+ member(X,Bi).
+isEmpty(X,Yi,Bi):- boardMembers(L), !,member(X,L),!, \+ member(X,Yi), \+ member(X,Bi).
 getEmptyElement(Y,B,[BoardHead|_],Empty):- \+member(BoardHead,Y), \+member(BoardHead,B), Empty = BoardHead.
 getEmptyElement(Y,B,[_|BoardTail],Empty):- getEmptyElement(Y,B,BoardTail,Empty).
 
-getEmptyPositions(Y,B,EmptyPositions):- boardMember(Board), findall(X,(member(X,Board),\+member(X,Y),\+member(X,B)),EmptyPositions).
+getEmptyPositions(Y,B,EmptyPositions):- boardMembers(Board), findall(X,(member(X,Board),\+member(X,Y),\+member(X,B)),EmptyPositions).
         
 % Yellow jumps yellow mover   
 move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
@@ -296,23 +295,38 @@ getAllPossibleMovesAux(_,[],_,_,Moves,Moves).
 getAllPossibleMoves(Player,StartingPositions,YMovers,BMovers,Moves):-
         getAllPossibleMovesAux(Player,StartingPositions,YMovers,BMovers,[],Moves).
 
-game(Yi,Bi,y) :- 
+
+game(Yi,Bi,y,2):-
         displayBoard(Yi,Bi),
         write('Yellow turn'),nl,
         write(' initialPos, finalPos'),nl,
         read(InitialPos), read(FinalPos),
         makePlay(y,Yi,Bi,InitialPos, FinalPos,Yo,Bo),
-        game(Yo,Bo,b).
+        game(Yo,Bo,b,2).
+game(Yi,Bi,b,2):-
+        write('Blue Bot Playing'),nl,
+        getAllPossibleMoves(b,Bi,Yi,Bi,[[Start,Final,Mid] | _]),
+        write('Moving ' + Start + ' To ' + Final),nl,
+        move(Yi,Bi,Start,Mid,Final,Yo,Bo),
+        game(Yo,Bo,y,2).
 
-game(Yi,Bi,b) :- 
+game(Yi,Bi,y,1) :- 
+        displayBoard(Yi,Bi),
+        write('Yellow turn'),nl,
+        write(' initialPos, finalPos'),nl,
+        read(InitialPos), read(FinalPos),
+        makePlay(y,Yi,Bi,InitialPos, FinalPos,Yo,Bo),
+        game(Yo,Bo,b,1).
+
+game(Yi,Bi,b,1) :- 
         displayBoard(Yi,Bi),
         write('Blue turn'),nl,
         write('initialPos, finalPos'),nl,
         read(InitialPos), read(FinalPos),
         makePlay(b,Yi,Bi,InitialPos, FinalPos,Yo,Bo),
-        game(Yo,Bo,y).
-game([],_).
-game(_,[]).
+        game(Yo,Bo,y,1).
+
+game(_,_,_,_):- write('Game Over').
 
 validStartOption(MODE) :- integer(MODE), MODE > 0, MODE < 4.
 
@@ -329,4 +343,4 @@ start :-
                 validStartOption(MODE),
         !,
         initialBoard(Y,B),
-        game(Y,B,y).
+        game(Y,B,y,MODE).
