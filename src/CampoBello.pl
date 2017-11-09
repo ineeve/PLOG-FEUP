@@ -254,10 +254,8 @@ makePlay(Player,Yi,Bi,InitialPos,FinalPos,Yo,Bo) :-
         isValid(Player,Yi,Bi,InitialPos,JumpPos,FinalPos),
         move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo).
 
-makePlay(_,Yi,Bi,_,_,Yo,Bo) :- 
-        write('Invalid Move, try again'),nl,
-        append([],Yi,Yo),
-        append([],Bi,Bo).
+makePlay(_,Yi,Bi,_,_,Yi,Bi) :- 
+        write('Invalid Move, try again'),nl.
 
 isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
         validJump2(PrevFinalPos,NextFinalPos,JumpPos),
@@ -274,36 +272,29 @@ isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
         NextFinalPos \= FirstInitialPos.
 
 isGameOver(YellowMovers,BlueMovers):-
-        getAllPossibleMoves(y,YellowMovers,BlueMovers,Moves),!,
+        getAllPossibleMoves(y,YellowMovers,YellowMovers,BlueMovers,Moves),!,
         list_empty(Moves,Result),
         Result == true.
 isGameOver(YellowMovers,BlueMovers):-
-        getAllPossibleMoves(b,YellowMovers,BlueMovers,Moves),!,
+        getAllPossibleMoves(b,BlueMovers,YellowMovers,BlueMovers,Moves),!,
         list_empty(Moves,Result),
         Result == true.
 
 list_empty([], true).
 list_empty([_|_], false).
 
-getAllPossibleMovesAux(_,[],_,_,Moves,Moves) :- !.
-getAllPossibleMovesAux(y, [YHead|YTail],Yi, Bi, CalcMoves, Moves) :-
-        isValid(y,Yi,Bi,YHead, Mid, Final),
-        getAllPossibleMovesAux(y,YTail,Yi,Bi,[[YHead,Final,Mid]|CalcMoves], Moves).
 
-getAllPossibleMovesAux(b,[BHead|BTail],Bi,Yi,CalcMoves,Moves):-
-        isValid(b,Yi,Bi,BHead,Mid,Final),
-        getAllPossibleMovesAux(b,BTail,Bi,Yi,[[BHead,Final,Mid]|CalcMoves],Moves).
+getAllPossibleMovesAux(Player, [Start|Tail],Yi, Bi, CalcMoves, Moves) :-
+        isValid(Player,Yi,Bi,Start, Mid, Final),
+        getAllPossibleMovesAux(Player,Tail,Yi,Bi,[[Start,Final,Mid]|CalcMoves], Moves).
         
-/* Use when previous condition fails*/        
-getAllPossibleMovesAux(y,[_|YTail],Yi,Bi,CalcMoves,Moves):- getAllPossibleMovesAux(y,YTail,Yi,Bi,CalcMoves,Moves).
+/* Used when previous condition fails*/        
+getAllPossibleMovesAux(Player,[_|Tail],Yi,Bi,CalcMoves,Moves):- getAllPossibleMovesAux(Player,Tail,Yi,Bi,CalcMoves,Moves).
 
-getAllPossibleMovesAux(b,[_,BTail],Bi,Yi,CalcMoves,Moves):- getAllPossibleMovesAux(b,BTail,Bi,Yi,CalcMoves,Moves).
+getAllPossibleMovesAux(_,[],_,_,Moves,Moves).
 
-getAllPossibleMoves(y,Y,B,Moves):-
-        getAllPossibleMovesAux(y,Y,Y,B,[],Moves).
-        
-getAllPossibleMoves(b,Y,B,Moves):-
-        getAllPossibleMovesAux(b,B,B,Y,[],Moves).
+getAllPossibleMoves(Player,StartingPositions,YMovers,BMovers,Moves):-
+        getAllPossibleMovesAux(Player,StartingPositions,YMovers,BMovers,[],Moves).
 
 game(Yi,Bi,y) :- 
         displayBoard(Yi,Bi),
@@ -311,7 +302,7 @@ game(Yi,Bi,y) :-
         write(' initialPos, finalPos'),nl,
         read(InitialPos), read(FinalPos),
         makePlay(y,Yi,Bi,InitialPos, FinalPos,Yo,Bo),
-        game(Yo,Bo,y).
+        game(Yo,Bo,b).
 
 game(Yi,Bi,b) :- 
         displayBoard(Yi,Bi),
