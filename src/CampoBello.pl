@@ -93,18 +93,19 @@ yellowPlayerPoints([],0).
 yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), yellowArea(Y), member(H,Y), P is P1 + 3.
 yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), (H==mid; blueArea(B), member(H,B)), P is P1 + 1.
 
-points(b,BlueMoversPos,Points) :- bluePlayerPoints(BlueMoversPos,Points).
-points(y,YellowMoversPos,Points) :- yellowPlayerPoints(YellowMoversPos,Points).
+points(b,BlueMoversPos,Points) :- bluePlayerPoints(BlueMoversPos,Points), write('Blue scored ' + Points + ' points').
+points(y,YellowMoversPos,Points) :- yellowPlayerPoints(YellowMoversPos,Points), write('Yellow scored ' + Points + ' points').
 
-winner(BlueMovers,YellowMovers) :- points(b,BlueMovers,P1), points(y,YellowMovers,P2), whoWins(P1,P2).
+winner(YellowMovers,BlueMovers) :- points(b,BlueMovers,P1), points(y,YellowMovers,P2), whoWins(P1,P2).
 whoWins(P1,P2) :- P1 > P2, write('Blue Player Wins').
 whoWins(P1,P2) :- P1 < P2, write('Yellow Player Wins').
 whoWins(P1,P2) :- P1 == P2, write('Draw').
 
 
-displaySingleP(P, PiecesY, _) :- member(P,PiecesY), write(y), write('  '). 
-displaySingleP(P, _, PiecesB) :- member(P,PiecesB), write(b), write('  ').
+displaySingleP(P, PiecesY, _) :- member(P,PiecesY), !, write(y), write('  '). 
+displaySingleP(P, _, PiecesB) :- member(P,PiecesB),!, write(b), write('  ').
 displaySingleP(_,_,_) :- write(e), write('  ').
+
 displayPos([H|T],PiecesY,PiecesB) :- displaySingleP(H,PiecesY,PiecesB),
                                 displayPos(T,PiecesY,PiecesB).
 displayPos([],_,_).
@@ -139,7 +140,7 @@ displayLine(6,PiecesY,PiecesB) :- write('b8  b2 /  y0    r1  r7  '), put_code(18
 
 displayLine(7,PiecesY,PiecesB) :- write('  b5 // y1  y2 '),put_code(92),write('  r3    '), put_code(186) ,write('   '),
                                 write('  '), displaySingleP(b5,PiecesY,PiecesB),
-                                write('  '), displayPos([g1,g2],PiecesY,PiecesB),
+                                write('  '), displayPos([y1,y2],PiecesY,PiecesB),
                                 write('  '), displaySingleP(r6,PiecesY,PiecesB), nl, nl.
                                 
 displayLine(8,PiecesY,PiecesB) :- write('b9 // y3  y4  y5 '),put_code(92),write('  r6  '), put_code(186) ,write('   '),
@@ -182,8 +183,8 @@ getEmptyElement(Y,B,[BoardHead|_],Empty):- \+member(BoardHead,Y), \+member(Board
 getEmptyElement(Y,B,[_|BoardTail],Empty):- getEmptyElement(Y,B,BoardTail,Empty).
 
 getEmptyPositions(Y,B,EmptyPositions):- boardMembers(Board), findall(X,(member(X,Board),\+member(X,Y),\+member(X,B)),EmptyPositions).
-        
-% Yellow jumps yellow mover   
+
+% Yellow jumps yellow mover
 move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         member(InitialPos,Yi),
         delete(Yi,InitialPos,Yo2),
@@ -198,7 +199,7 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         delete(Yi,InitialPos,Yo2),
         append([FinalPos],Yo2,Yo3),
         member(JumpPos,Bi),
-        write('Select mover to remove'),
+        write('Select mover to remove: '),
         read(MoverToRemove),
         member(MoverToRemove,Yo3),
         delete(Yo3,MoverToRemove,Yo),
@@ -237,7 +238,7 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         delete(Bo3,MoverToRemove,Bo),
         append([],Yi,Yo).
 
-% Blue jumps yellow mover and selects invalid mover to remove.  
+% Blue jumps yellow mover and selects invalid mover to remove.
 move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         member(InitialPos,Bi),
         delete(Bi,InitialPos,Bo2),
@@ -248,13 +249,6 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         \+ member(MoverToRemove,Bo3),
         write('Invalid mover to remove'),
         move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo).
-
-makePlay(Player,Yi,Bi,InitialPos,FinalPos,Yo,Bo) :- 
-        isValid(Player,Yi,Bi,InitialPos,JumpPos,FinalPos),
-        move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo).
-
-makePlay(_,Yi,Bi,_,_,Yi,Bi) :- 
-        write('Invalid Move, try again'),nl.
 
 isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
         validJump2(PrevFinalPos,NextFinalPos,JumpPos),
@@ -272,15 +266,16 @@ isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
 
 isGameOver(YellowMovers,BlueMovers):-
         getAllPossibleMoves(y,YellowMovers,YellowMovers,BlueMovers,Moves),!,
-        list_empty(Moves,Result),
-        Result == true.
+        list_empty(Moves),!,
+        winner(YellowMovers,BlueMovers).
 isGameOver(YellowMovers,BlueMovers):-
         getAllPossibleMoves(b,BlueMovers,YellowMovers,BlueMovers,Moves),!,
-        list_empty(Moves,Result),
-        Result == true.
+        list_empty(Moves),!,
+        winner(YellowMovers,BlueMovers).
 
-list_empty([], true).
-list_empty([_|_], false).
+list_empty([]).
+list_empty([_|_]):- fail.
+        
 
 
 getAllPossibleMovesAux(Player, [Start|Tail],Yi, Bi, CalcMoves, Moves) :-
@@ -310,25 +305,63 @@ game(Yi,Bi,b,2):-
         move(Yi,Bi,Start,Mid,Final,Yo,Bo),
         game(Yo,Bo,y,2).
 
-game(Yi,Bi,y,1) :- 
-        displayBoard(Yi,Bi),
-        write('Yellow turn'),nl,
-        write(' initialPos, finalPos'),nl,
-        read(InitialPos), read(FinalPos),
-        makePlay(y,Yi,Bi,InitialPos, FinalPos,Yo,Bo),
-        game(Yo,Bo,b,1).
+switchPlayer(y, b).
+switchPlayer(b,y).
 
-game(Yi,Bi,b,1) :- 
-        displayBoard(Yi,Bi),
-        write('Blue turn'),nl,
-        write('initialPos, finalPos'),nl,
-        read(InitialPos), read(FinalPos),
-        makePlay(b,Yi,Bi,InitialPos, FinalPos,Yo,Bo),
-        game(Yo,Bo,y,1).
 
-game(_,_,_,_):- write('Game Over').
+readConsecutiveMove(Player,Yi,Bi,FirstInitial,PrevFinal,Jump,Final):-
+        repeat,
+        write('Choose final destination for '), write(PrevFinal),
+        read(Final),
+        isValid(Player,Yi,Bi,PrevFinal,Jump,Final),
+        FirstInitial \= Final,
+        !.
+
+makePlay(Player,FirstInitial,[Initial,Jump,Final],Yi,Bi,Yo,Bo):-
+        move(Yi,Bi,Initial,Jump,Final,Yo,Bo),
+        write('Play again?(y/n)'),
+        read(Answer),
+        Answer == y,
+        readConsecutiveMove(Player,Yo,Bo,FirstInitial,Final,NextJump,NextFinal),
+        makePlay(Player, FirstInitial, [Final,NextJump,NextFinal],Yo,Bo,Yo,Bo).
+        
+        
+        
+
+/* Player Vs Player With Possible initial moves*/
+game(Yi,Bi,Player,1) :-
+        displayBoard(Yi,Bi),
+        append(Yi,Bi,FullBoard),
+        getAllPossibleMoves(Player,FullBoard,Yi,Bi,PossMoves),!,
+        \+ list_empty(PossMoves),!,
+        write(Player), write(' turn'),nl,
+        readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
+        makePlay(Player,Initial,[Initial,Jump,Final],Yi,Bi,Yo,Bo),
+        switchPlayer(Player,NextPlayer),
+        game(Yo,Bo,NextPlayer,1).
+        
+game(Yi,Bi,Player,1):-
+        displayBoard(Yi,Bi),
+        append(Yi,Bi,FullBoard),
+        getAllPossibleMoves(Player,FullBoard,Yi,Bi,PossMoves),
+        list_empty(PossMoves),
+        winner(Yi,Bi).
+        
+        
 
 validStartOption(MODE) :- integer(MODE), MODE > 0, MODE < 4.
+
+
+readValidPlay(InitialPos,JumpPos,FinalPos,Yi,Bi,Player):-
+        repeat,
+                write('Select valid initial pos: '),
+                read(InitialPos),
+                nl,
+                write('Select valid final pos'),
+                read(FinalPos),nl,
+                isValid(Player, Yi,Bi,InitialPos,JumpPos,FinalPos),
+                !.
+                
 
 start :-
         write('-------------------------'),nl,
