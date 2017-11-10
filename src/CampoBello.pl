@@ -102,55 +102,117 @@ whoWins(P1,P2) :- P1 < P2, write('Yellow Player Wins').
 whoWins(P1,P2) :- P1 == P2, write('Draw').
 
 
-displaySingleP(P, PiecesY, _) :- member(P,PiecesY), !, write(y), write('  '). 
-displaySingleP(P, _, PiecesB) :- member(P,PiecesB),!, write(b), write('  ').
-displaySingleP(_,_,_) :- write(e), write('  ').
-
+displaySingleP(P, PiecesY, _) :- member(P,PiecesY),!, write(y), write('   '). 
+displaySingleP(P, _, PiecesB) :- member(P,PiecesB),!, write(b), write('   ').
+displaySingleP(_,_,_) :- write(e), write('   ').
 displayPos([H|T],PiecesY,PiecesB) :- displaySingleP(H,PiecesY,PiecesB),
                                 displayPos(T,PiecesY,PiecesB).
 displayPos([],_,_).
 
-displayLine(1,PiecesY,PiecesB) :- write('    g9  g8  g7  g6      '), put_code(186) ,write('       '),
-                        displayPos([g9,g8,g7,g6],PiecesY,PiecesB), nl, nl.
+displayLine(1,PiecesY,PiecesB) :- write('    g9--g8--g7--g6      '), 
+                                put_code(186) ,
+                                write('       '), displayPos([g9,g8,g7,g6],PiecesY,PiecesB), 
+                                nl, 
+                                write('      '), put_code(92), write(' / '), put_code(92), write(' / '), put_code(92), write(' /       '), 
+                                put_code(186), 
+                                write('        '), put_code(92), write('         /  '), 
+                                nl.
 
-displayLine(2,PiecesY,PiecesB) :- write('b6    g5  g4  g3    r9  '), put_code(186) ,write('   '),
-                                displaySingleP(b6,PiecesY,PiecesB), write('  '),
+displayLine(2,PiecesY,PiecesB) :- write('b6    g5--g4--g3    r9  '), 
+                                put_code(186) ,
+                                write('   '), displaySingleP(b6,PiecesY,PiecesB), write('  '),
                                 displayPos([g5,g4,g3],PiecesY,PiecesB), write('  '),
-                                displaySingleP(r9,PiecesY,PiecesB), nl, nl.
+                                displaySingleP(r9,PiecesY,PiecesB), 
+                                nl, 
+                                write('|'), put_code(92), write('      '), put_code(92), write(' / '), put_code(92), write(' /     /|  '), 
+                                put_code(186), 
+                                write('    '),put_code(92), write('     '), put_code(92), write('     /     /'), 
+                                nl.
 
-displayLine(3,PiecesY,PiecesB) :- write('  b3    g2  g1    r5    '), put_code(186) ,write('   '),
-                                write('  '), displaySingleP(b3,PiecesY,PiecesB), write('  '),
+displayLine(3,PiecesY,PiecesB) :- write('| b3    g2--g1    r5 |  '), 
+                                put_code(186) , 
+                                write('     '), displaySingleP(b3,PiecesY,PiecesB), write('  '),
                                 displayPos([g2,g1],PiecesY,PiecesB), write('  '),
-                                displaySingleP(r5,PiecesY,PiecesB), nl, nl.
+                                displaySingleP(r5,PiecesY,PiecesB), 
+                                nl, 
+                                write('| /'), put_code(92), write('      '), put_code(92), write(' /     /'), put_code(92),write(' |  '), 
+                                put_code(186), 
+                                write('      '),put_code(92), write('     '), put_code(92), write(' /     /'),  
+                                nl.
 
-displayLine(4,PiecesY,PiecesB) :- write('b7  b1    g0    r2  r8  '), put_code(186) ,write('   '),
-                                displayPos([b7,b1],PiecesY,PiecesB), write('  '),
+displayLine(4,PiecesY,PiecesB) :- write('b7  b1    g0    r2  r8  '), 
+                                put_code(186) ,
+                                write('   '), displayPos([b7,b1],PiecesY,PiecesB), write('  '),
                                 displaySingleP(g0,PiecesY,PiecesB), write('  '),
-                                displayPos([r2,r8],PiecesY,PiecesB), nl, nl.
+                                displayPos([r2,r8],PiecesY,PiecesB), 
+                                nl, 
+                                write('|'), put_code(92), write('  /'),put_code(92),  write('  /  | '), put_code(92), write('  /'),put_code(92),
+                                write('  /|  '), 
+                                put_code(186), 
+                                write('        '),put_code(92), write('  /   '), put_code(92), write('  /     '),
+                                nl.
 
-displayLine(5,PiecesY,PiecesB) :- write('  b4  b0  mid r0  r4    '), put_code(186) ,write('   '),
-                                write(' '), displaySingleP(b4,PiecesY,PiecesB),
-                                write(' '), displayPos([b0,mid,r0],PiecesY,PiecesB),
-                                write(' '),displaySingleP(r4,PiecesY,PiecesB), nl, nl.
+displayLine(5,PiecesY,PiecesB) :- write('| b4  b0--mid-r0  r4 |  '), 
+                                put_code(186) ,
+                                write('     '), displaySingleP(b4,PiecesY,PiecesB),
+                                displayPos([b0,mid,r0],PiecesY,PiecesB),
+                                displaySingleP(r4,PiecesY,PiecesB), 
+                                nl,
+                                write('|/  '),put_code(92), write('/  '),put_code(92),  write('  | /  '), put_code(92), write('/  '),
+                                put_code(92),write('|  '), 
+                                put_code(186), 
+                                write('        /  '),put_code(92), write('   /  '), put_code(92), write('     '),
+                                nl.
 
-displayLine(6,PiecesY,PiecesB) :- write('b8  b2 /  y0    r1  r7  '), put_code(186) ,write('   '),
-                                displayPos([b8,b2],PiecesY,PiecesB), write('  '),
+displayLine(6,PiecesY,PiecesB) :- write('b8  b2    y0    r1  r7  '), 
+                                put_code(186),
+                                write('   '), displayPos([b8,b2],PiecesY,PiecesB), write('  '),
                                 displaySingleP(y0,PiecesY,PiecesB), write('  '),
-                                displayPos([r1,r7],PiecesY,PiecesB), nl, nl.
+                                displayPos([r1,r7],PiecesY,PiecesB), 
+                                nl, 
+                                write('| '), put_code(92), write('/      / '), put_code(92), write('     '), put_code(92),write('/ |  '), 
+                                put_code(186), 
+                                write('      /     / '),put_code(92), write('     '), put_code(92),    
+                                nl.
 
-displayLine(7,PiecesY,PiecesB) :- write('  b5 // y1  y2 '),put_code(92),write('  r3    '), put_code(186) ,write('   '),
-                                write('  '), displaySingleP(b5,PiecesY,PiecesB),
+displayLine(7,PiecesY,PiecesB) :- write('| b5    y1--y2    r3 |  '), 
+                                put_code(186) ,
+                                write('     '), displaySingleP(b5,PiecesY,PiecesB),
                                 write('  '), displayPos([y1,y2],PiecesY,PiecesB),
-                                write('  '), displaySingleP(r6,PiecesY,PiecesB), nl, nl.
+                                write('  '), displaySingleP(r6,PiecesY,PiecesB), 
+                                nl,
+                                write('|'), write('/      / '), put_code(92), write(' / '), put_code(92), write('     '), 
+                                put_code(92), write('|  '), 
+                                put_code(186), 
+                                write('    /     /     '),put_code(92), write('     '), put_code(92),  
+                                nl.
                                 
-displayLine(8,PiecesY,PiecesB) :- write('b9 // y3  y4  y5 '),put_code(92),write('  r6  '), put_code(186) ,write('   '),
-                                displaySingleP(b9,PiecesY,PiecesB), write('  '),
-                                displayPos([y3,y4,y5],PiecesY,PiecesB),
-                                write('  '), displaySingleP(r6,PiecesY,PiecesB), nl, nl.
+displayLine(8,PiecesY,PiecesB) :- write('b9    y3--y4--y5    r6  '), 
+                                put_code(186) ,
+                                write('   '), displaySingleP(b9,PiecesY,PiecesB), 
+                                write('  '), displayPos([y3,y4,y5],PiecesY,PiecesB),
+                                write('  '), displaySingleP(r6,PiecesY,PiecesB), 
+                                nl,
+                                write('     / '), put_code(92), write('  / '), put_code(92), write(' / '), put_code(92), write('       '), 
+                                put_code(186), 
+                                write('        /         '), put_code(92),  
+                                nl.
 
-displayLine(9,PiecesY,PiecesB) :- write('  / y6  y7  y8  y9 '),put_code(92),write('    '), put_code(186) ,write('   '),
-                                write('   '),displayPos([y6,y7,y8,y9],PiecesY,PiecesB), nl, nl.
+displayLine(9,PiecesY,PiecesB) :- write('    y6--y7--y8--y9      '), 
+                                put_code(186) ,
+                                write('       '), displayPos([y6,y7,y8,y9],PiecesY,PiecesB), 
+                                nl, 
+                                nl.
+
 displayBoard(Y,B) :- 
+        nl,
+        write('       Positions        '), put_code(186), write('        Game Board'), nl, 
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),nl,
         displayLine(1,Y,B),
         displayLine(2,Y,B), 
         displayLine(3,Y,B), 
@@ -351,7 +413,6 @@ game(Yi,Bi,Player,1):-
 
 validStartOption(MODE) :- integer(MODE), MODE > 0, MODE < 4.
 
-
 readValidPlay(InitialPos,JumpPos,FinalPos,Yi,Bi,Player):-
         repeat,
                 write('Select valid initial pos: '),
@@ -361,15 +422,20 @@ readValidPlay(InitialPos,JumpPos,FinalPos,Yi,Bi,Player):-
                 read(FinalPos),nl,
                 isValid(Player, Yi,Bi,InitialPos,JumpPos,FinalPos),
                 !.
-                
 
-start :-
-        write('-------------------------'),nl,
-        write('----------MENU-----------'),nl,
-        write('-- 1.Player vs Player ---'),nl,
-        write('-- 2.Player vs PC -------'),nl,
-        write('-- 3.PC vs PC -----------'),nl,
-        write('-------------------------'),nl,
+start :- nl, put_code(201), 
+        put_code(205), put_code(205),put_code(205),put_code(205), put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        write('MENU'),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(187),nl,
+        put_code(186), write('  1.Player vs Player  '), put_code(186),nl,
+        put_code(186), write('  2.Player vs PC      '), put_code(186),nl,
+        put_code(186), write('  3.PC vs PC          '), put_code(186),nl,
+        put_code(200), 
+        put_code(205), put_code(205),put_code(205),put_code(205), put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(205), put_code(205), put_code(205), put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(188),nl,nl,nl,
         repeat,
                 write('Insert Valid Option: '),
                 read(MODE),nl,
