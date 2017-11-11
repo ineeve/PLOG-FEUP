@@ -523,5 +523,5 @@ start :- nl, put_code(201),
         initGames(Y,B,MODE).
 
 initGames(Y, B, MODE):- MODE == 1, game(Y,B,y,MODE,_,_).
-initGames(Y, B, MODE):- MODE == 2, chooseDificulty(b, Dific), game(Y,B,y,MODE,Dific,_).
+initGames(Y, B, MODE):- MODE == 2, chooseDificulty(b, Dific), game(Y,B,y,MODE,_,Dific).
 initGames(Y, B, MODE):- MODE == 3, chooseDificulty(y, YDific), chooseDificulty(b, BDific), game(Y,B,y,MODE,YDific,BDific).
