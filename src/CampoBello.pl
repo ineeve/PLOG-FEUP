@@ -353,20 +353,6 @@ getAllPossibleMoves(Player,StartingPositions,YMovers,BMovers,Moves):-
         getAllPossibleMovesAux(Player,StartingPositions,YMovers,BMovers,[],Moves).
 
 
-game(Yi,Bi,y,2):-
-        displayBoard(Yi,Bi),
-        write('Yellow turn'),nl,
-        write(' initialPos, finalPos'),nl,
-        read(InitialPos), read(FinalPos),
-        makePlay(y,Yi,Bi,InitialPos, FinalPos,Yo,Bo),
-        game(Yo,Bo,b,2).
-game(Yi,Bi,b,2):-
-        write('Blue Bot Playing'),nl,
-        getAllPossibleMoves(b,Bi,Yi,Bi,[[Start,Final,Mid] | _]),
-        write('Moving ' + Start + ' To ' + Final),nl,
-        move(Yi,Bi,Start,Mid,Final,Yo,Bo),
-        game(Yo,Bo,y,2).
-
 switchPlayer(y, b).
 switchPlayer(b,y).
 
@@ -379,34 +365,51 @@ readConsecutiveMove(Player,Yi,Bi,FirstInitial,PrevFinal,Jump,Final):-
         FirstInitial \= Final,
         !.
 
-makePlay(Player,FirstInitial,[Initial,Jump,Final],Yi,Bi,Yo,Bo):-
+continuePlaying(y).
+continuePlaying(n) :- fail.
+
+makeConsecutivePlay(Player,Yi,Bi,FirstInitial,PrevFinal,Yo,Bo):-
+        write('Checking for available next moves'),nl,
+        getAllPossibleMoves(Player,[PrevFinal],Yi,Bi,Moves),
+        \+ list_empty(Moves),
+        write('Continue Playing? (y/n)'),
+        read(IsToContinue),nl,
+        continuePlaying(IsToContinue),
+        readConsecutiveMove(Player,Yi,Bi,FirstInitial,PrevFinal,NextJump,NextFinal),
+        move(Yi,Bi,PrevFinal,NextJump,NextFinal,Yo,Bo).
+makeConsecutivePlay(_,Yi,Bi,_,_,Yi,Bi):-
+        write('No more moves available'),nl.
+
+/* Human-Pc*/
+game(Yi,Bi,y,2):-
+        displayBoard(Yi,Bi),
+        \+ isGameOver(Yi,Bi),
+        write(Player), write(' turn'),nl,
+        readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
         move(Yi,Bi,Initial,Jump,Final,Yo,Bo),
-        write('Play again?(y/n)'),
-        read(Answer),
-        Answer == y,
-        readConsecutiveMove(Player,Yo,Bo,FirstInitial,Final,NextJump,NextFinal),
-        makePlay(Player, FirstInitial, [Final,NextJump,NextFinal],Yo,Bo,Yo,Bo).
-        
-        
-        
+        makeConsecutivePlay(Player,Yo,Bo,Initial,Final,Yo2,Bo2),
+        game(Yo2,Bo2,b,2).
+game(Yi,Bi,b,2):-
+        write('Blue Bot Playing'),nl,
+        getAllPossibleMoves(b,Bi,Yi,Bi,[[Start,Final,Mid] | _]),
+        write('Moving '), write(Start), write(' To '), write(Final),nl,
+        move(Yi,Bi,Start,Mid,Final,Yo,Bo),
+        game(Yo,Bo,y,2).
 
 /* Player Vs Player With Possible initial moves*/
 game(Yi,Bi,Player,1) :-
         displayBoard(Yi,Bi),
-        append(Yi,Bi,FullBoard),
-        getAllPossibleMoves(Player,FullBoard,Yi,Bi,PossMoves),!,
-        \+ list_empty(PossMoves),!,
+        \+ isGameOver(Yi,Bi),
         write(Player), write(' turn'),nl,
         readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
-        makePlay(Player,Initial,[Initial,Jump,Final],Yi,Bi,Yo,Bo),
+        move(Yi,Bi,Initial,Jump,Final,Yo,Bo),
+        makeConsecutivePlay(Player,Yo,Bo,Initial,Final,Yo2,Bo2),
         switchPlayer(Player,NextPlayer),
-        game(Yo,Bo,NextPlayer,1).
+        game(Yo2,Bo2,NextPlayer,1).
         
-game(Yi,Bi,Player,1):-
+game(Yi,Bi,_,_):-
         displayBoard(Yi,Bi),
-        append(Yi,Bi,FullBoard),
-        getAllPossibleMoves(Player,FullBoard,Yi,Bi,PossMoves),
-        list_empty(PossMoves),
+        isGameOver(Yi,Bi),
         winner(Yi,Bi).
         
         
