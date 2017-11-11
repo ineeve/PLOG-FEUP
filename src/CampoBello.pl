@@ -403,39 +403,39 @@ makeConsecutivePlay(_,Yi,Bi,_,_,Yi,Bi):-
         write('No more moves available'),nl.
 
 /* PC-PC */
-game(Yi,Bi,y,3):-
+game(Yi,Bi,y,3,YDific,BDific):-
         displayBoard(Yi,Bi),
         write('Yellow Bot Playing'),nl,
         getAllPossibleMoves(y,Yi,Yi,Bi,[[Start,Final,Mid] | _]),
         write('Moving '), write(Start), write(' To '), write(Final),nl,
         move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot),
-        game(Yo,Bo,b,3).
-game(Yi,Bi,b,3):-
+        game(Yo,Bo,b,3,YDific,BDific).
+game(Yi,Bi,b,3,YDific,BDific):-
         displayBoard(Yi,Bi),
         write('Blue Bot Playing'),nl,
         getAllPossibleMoves(b,Bi,Yi,Bi,[[Start,Final,Mid] | _]),
         write('Moving '), write(Start), write(' To '), write(Final),nl,
         move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot),
-        game(Yo,Bo,y,3).
+        game(Yo,Bo,y,3,YDific,BDific).
 
 /* Human-Pc*/
-game(Yi,Bi,y,2):-
+game(Yi,Bi,y,2,_,BDific):-
         displayBoard(Yi,Bi),
         \+ isGameOver(Yi,Bi),
         write(Player), write(' turn'),nl,
         readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
         move(Yi,Bi,Initial,Jump,Final,Yo,Bo,_),
         makeConsecutivePlay(Player,Yo,Bo,Initial,Final,Yo2,Bo2),
-        game(Yo2,Bo2,b,2).
-game(Yi,Bi,b,2):-
+        game(Yo2,Bo2,b,2,_,BDific).
+game(Yi,Bi,b,2,_,BDific):-
         write('Blue Bot Playing'),nl,
         getAllPossibleMoves(b,Bi,Yi,Bi,[[Start,Final,Mid] | _]),
         write('Moving '), write(Start), write(' To '), write(Final),nl,
         move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot),
-        game(Yo,Bo,y,2).
+        game(Yo,Bo,y,2,_,BDific).
 
 /* Player Vs Player With Possible initial moves*/
-game(Yi,Bi,Player,1) :-
+game(Yi,Bi,Player,1,_,_) :-
         displayBoard(Yi,Bi),
         \+ isGameOver(Yi,Bi),
         write(Player), write(' turn'),nl,
@@ -443,9 +443,9 @@ game(Yi,Bi,Player,1) :-
         move(Yi,Bi,Initial,Jump,Final,Yo,Bo,_),
         makeConsecutivePlay(Player,Yo,Bo,Initial,Final,Yo2,Bo2),
         switchPlayer(Player,NextPlayer),
-        game(Yo2,Bo2,NextPlayer,1).
+        game(Yo2,Bo2,NextPlayer,1,_,_).
         
-game(Yi,Bi,_,_):-
+game(Yi,Bi,_,_,_,_):-
         displayBoard(Yi,Bi),
         isGameOver(Yi,Bi),
         winner(Yi,Bi).
@@ -453,6 +453,7 @@ game(Yi,Bi,_,_):-
         
 
 validStartOption(MODE) :- integer(MODE), MODE > 0, MODE < 4.
+validDificOption(MODE) :- integer(MODE), MODE > 0, MODE < 3.
 
 readValidPlay(InitialPos,JumpPos,FinalPos,Yi,Bi,Player):-
         repeat,
@@ -463,6 +464,42 @@ readValidPlay(InitialPos,JumpPos,FinalPos,Yi,Bi,Player):-
                 read(FinalPos),nl,
                 isValid(Player, Yi,Bi,InitialPos,JumpPos,FinalPos),
                 !.
+
+chooseDificulty(b, Dificulty) :- nl, put_code(201), 
+        put_code(205),put_code(205),
+        write('BOT Blue Dificulty'),
+        put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(187),nl,
+        put_code(186), write('  1. Easy               '), put_code(186),nl,
+        put_code(186), write('  2. Medium             '), put_code(186),nl,
+        put_code(200), 
+        put_code(205),put_code(205), put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205), put_code(205), put_code(205), put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(188),nl,nl,nl,
+        repeat,
+                write('Insert Valid Option: '),
+                read(Dificulty),nl,
+                validDificOption(Dificulty),
+        !.
+
+chooseDificulty(y, Dificulty) :- nl, put_code(201), 
+        put_code(205),put_code(205),
+        write('BOT Yellow Dificulty'),
+        put_code(205),put_code(205),
+        put_code(187),nl,
+        put_code(186), write('  1. Easy               '), put_code(186),nl,
+        put_code(186), write('  2. Medium             '), put_code(186),nl,
+        put_code(200), 
+        put_code(205),put_code(205), put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205), put_code(205), put_code(205), put_code(205),put_code(205),put_code(205),
+        put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
+        put_code(188),nl,nl,nl,
+        repeat,
+                write('Insert Valid Option: '),
+                read(Dificulty),nl,
+                validDificOption(Dificulty),
+        !.
 
 start :- nl, put_code(201), 
         put_code(205), put_code(205),put_code(205),put_code(205), put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),
@@ -483,4 +520,8 @@ start :- nl, put_code(201),
                 validStartOption(MODE),
         !,
         initialBoard(Y,B),
-        game(Y,B,y,MODE).
+        initGames(Y,B,MODE).
+
+initGames(Y, B, MODE):- MODE == 1, game(Y,B,y,MODE,_,_).
+initGames(Y, B, MODE):- MODE == 2, chooseDificulty(b, Dific), game(Y,B,y,MODE,_,Dific).
+initGames(Y, B, MODE):- MODE == 3, chooseDificulty(y, YDific), chooseDificulty(b, BDific), game(Y,B,y,MODE,YDific,BDific).
