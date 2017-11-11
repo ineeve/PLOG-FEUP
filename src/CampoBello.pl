@@ -246,8 +246,10 @@ getEmptyElement(Y,B,[_|BoardTail],Empty):- getEmptyElement(Y,B,BoardTail,Empty).
 
 getEmptyPositions(Y,B,EmptyPositions):- boardMembers(Board), findall(X,(member(X,Board),\+member(X,Y),\+member(X,B)),EmptyPositions).
 
+getFirstElement([First|_], First).
+
 % Yellow jumps yellow mover
-move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_) :-
         member(InitialPos,Yi),
         delete(Yi,InitialPos,Yo2),
         append([FinalPos],Yo2,Yo3),
@@ -255,8 +257,18 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         delete(Yo3,JumpPos,Yo),
         append([],Bi,Bo).
 
+%(Bot) Yellow jumps blue mover   
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,bot) :-
+        member(InitialPos,Yi),
+        delete(Yi,InitialPos,Yo2),
+        append([FinalPos],Yo2,Yo3),
+        member(JumpPos,Bi),
+        getFirstElement(Yo3, MoverToRemove),
+        delete(Yo3,MoverToRemove,Yo),
+        append([],Bi,Bo).     
+
 % Yellow jumps blue mover and selects valid mover to remove.     
-move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_) :-
         member(InitialPos,Yi),
         delete(Yi,InitialPos,Yo2),
         append([FinalPos],Yo2,Yo3),
@@ -268,7 +280,7 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         append([],Bi,Bo).
 
 % Yellow jumps blue mover and selects invalid mover to remove.  
-move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_) :-
         member(InitialPos,Yi),
         delete(Yi,InitialPos,Yo2),
         append([FinalPos],Yo2,Yo3),
@@ -277,10 +289,10 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         read(MoverToRemove),
         \+ member(MoverToRemove,Yo3),
         write('Invalid mover to remove'),
-        move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo).
+        move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_).
 
 % Blue jumps blue mover   
-move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_) :-
         member(InitialPos,Bi),
         delete(Bi,InitialPos,Bo2),
         append([FinalPos],Bo2,Bo3),
@@ -288,8 +300,18 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         delete(Bo3,JumpPos,Bo),
         append([],Yi,Yo).
 
+%(Bot) Blue jumps yellow mover   
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,bot) :-
+        member(InitialPos,Bi),
+        delete(Bi,InitialPos,Bo2),
+        append([FinalPos],Bo2,Bo3),
+        member(JumpPos,Yi),
+        getFirstElement(Bo3, MoverToRemove),
+        delete(Bo3,MoverToRemove,Bo),
+        append([],Yi,Yo).
+
 % Blue jumps yellow mover and selects valid mover to remove.     
-move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_) :-
         member(InitialPos,Bi),
         delete(Bi,InitialPos,Bo2),
         append([FinalPos],Bo2,Bo3),
@@ -301,7 +323,7 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         append([],Yi,Yo).
 
 % Blue jumps yellow mover and selects invalid mover to remove.
-move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
+move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_) :-
         member(InitialPos,Bi),
         delete(Bi,InitialPos,Bo2),
         append([FinalPos],Bo2,Bo3),
@@ -310,7 +332,7 @@ move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo) :-
         read(MoverToRemove),
         \+ member(MoverToRemove,Bo3),
         write('Invalid mover to remove'),
-        move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo).
+        move(Yi,Bi,InitialPos,JumpPos,FinalPos,Yo,Bo,_).
 
 isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
         validJump2(PrevFinalPos,NextFinalPos,JumpPos),
@@ -376,9 +398,25 @@ makeConsecutivePlay(Player,Yi,Bi,FirstInitial,PrevFinal,Yo,Bo):-
         read(IsToContinue),nl,
         continuePlaying(IsToContinue),
         readConsecutiveMove(Player,Yi,Bi,FirstInitial,PrevFinal,NextJump,NextFinal),
-        move(Yi,Bi,PrevFinal,NextJump,NextFinal,Yo,Bo).
+        move(Yi,Bi,PrevFinal,NextJump,NextFinal,Yo,Bo,_).
 makeConsecutivePlay(_,Yi,Bi,_,_,Yi,Bi):-
         write('No more moves available'),nl.
+
+/* PC-PC */
+game(Yi,Bi,y,3):-
+        displayBoard(Yi,Bi),
+        write('Yellow Bot Playing'),nl,
+        getAllPossibleMoves(y,Yi,Yi,Bi,[[Start,Final,Mid] | _]),
+        write('Moving '), write(Start), write(' To '), write(Final),nl,
+        move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot),
+        game(Yo,Bo,b,3).
+game(Yi,Bi,b,3):-
+        displayBoard(Yi,Bi),
+        write('Blue Bot Playing'),nl,
+        getAllPossibleMoves(b,Bi,Yi,Bi,[[Start,Final,Mid] | _]),
+        write('Moving '), write(Start), write(' To '), write(Final),nl,
+        move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot),
+        game(Yo,Bo,y,3).
 
 /* Human-Pc*/
 game(Yi,Bi,y,2):-
@@ -386,14 +424,14 @@ game(Yi,Bi,y,2):-
         \+ isGameOver(Yi,Bi),
         write(Player), write(' turn'),nl,
         readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
-        move(Yi,Bi,Initial,Jump,Final,Yo,Bo),
+        move(Yi,Bi,Initial,Jump,Final,Yo,Bo,_),
         makeConsecutivePlay(Player,Yo,Bo,Initial,Final,Yo2,Bo2),
         game(Yo2,Bo2,b,2).
 game(Yi,Bi,b,2):-
         write('Blue Bot Playing'),nl,
         getAllPossibleMoves(b,Bi,Yi,Bi,[[Start,Final,Mid] | _]),
         write('Moving '), write(Start), write(' To '), write(Final),nl,
-        move(Yi,Bi,Start,Mid,Final,Yo,Bo),
+        move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot),
         game(Yo,Bo,y,2).
 
 /* Player Vs Player With Possible initial moves*/
@@ -402,7 +440,7 @@ game(Yi,Bi,Player,1) :-
         \+ isGameOver(Yi,Bi),
         write(Player), write(' turn'),nl,
         readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
-        move(Yi,Bi,Initial,Jump,Final,Yo,Bo),
+        move(Yi,Bi,Initial,Jump,Final,Yo,Bo,_),
         makeConsecutivePlay(Player,Yo,Bo,Initial,Final,Yo2,Bo2),
         switchPlayer(Player,NextPlayer),
         game(Yo2,Bo2,NextPlayer,1).
