@@ -213,10 +213,8 @@ writeWhoIsPlaying(y, bot):-
 
 
 
-getBotDiff(y,YDif,_,BotLevel):-
-        BotLevel is YDif.
-getBotDiff(b,_,BDif,BotLevel):-
-        BotLevel is BDif.
+getBotDiff(y,YDif,_,YDif).
+getBotDiff(b,_,BDif,BDif).
 
 gameHuman(Player,Yi,Bi,Yo,Bo):-
         displayBoard(Yi,Bi),
