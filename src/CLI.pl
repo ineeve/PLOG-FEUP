@@ -119,3 +119,13 @@ displayBoard(Y,B) :-
         displayLine(8,Y,B),
         displayLine(9,Y,B),
         nl,nl.
+
+
+writeWhoIsPlaying(b, human):-
+        write('Blue Human Turn'),nl.
+writeWhoIsPlaying(y, human):-
+        write('Yellow Human Turn'),nl.
+writeWhoIsPlaying(b, bot):-
+        write('Blue Bot Turn'),nl.
+writeWhoIsPlaying(y, bot):-
+        write('Yellow Bot Turn'),nl.

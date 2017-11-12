@@ -220,17 +220,6 @@ makeConsecutivePlay(_,Yi,Bi,_,_,Yi,Bi,_,_):-
         write('No more moves available'),nl.
 
 
-writeWhoIsPlaying(b, human):-
-        write('Blue Human Turn'),nl.
-writeWhoIsPlaying(y, human):-
-        write('Yellow Human Turn'),nl.
-writeWhoIsPlaying(b, bot):-
-        write('Blue Bot Turn'),nl.
-writeWhoIsPlaying(y, bot):-
-        write('Yellow Bot Turn'),nl.
-
-
-
 getBotDiff(y,YDif,_,YDif).
 getBotDiff(b,_,BDif,BDif).
 
@@ -293,8 +282,8 @@ game(Yi,Bi,Player,1,_,_) :-
         game(Yo,Bo,NextPlayer,1,_,_).
         
 game(Yi,Bi,_,_,_,_):-
-        write('Game Over'),nl,nl,
         displayBoard(Yi,Bi),
+        write('Game Over'),nl,nl,
         winner(Yi,Bi).
         
         
