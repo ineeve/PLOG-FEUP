@@ -69,14 +69,18 @@ O relatório segue a seguinte estrutura: O Jogo Campo Bello, onde está descrito
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{O Jogo Campo Bello}
 
-Campo Bello é um jogo que pode ser jogado de 2 a 4 jogadores. Tem inspiração no jogo clássico "Resta Um" ou "Peg Solitaire" em Inglês. É um jogo ainda recente, criado em 2017.
+Campo Bello é um jogo que pode ser jogado de 2 a 4 jogadores. Tem inspiração no jogo clássico "Resta Um" ou "Peg Solitaire" em Inglês. É um jogo ainda recente, criado em 2017.  
+
 Para ganhar, um jogador deve tentar remover todas as suas peças do tabuleiro antes dos adversários.
-O tabuleiro consiste em 4 triângulos que rodeiam um diamante central. Os triângulos correspodem às áreas iniciais de cada jogador. As peças são removidas ao saltar:  saltar uma peça nossa causa a remoção da peça que foi saltada; saltar uma peça adversária permite-nos remover uma peça nossa do tabuleiro.
+O tabuleiro consiste em 4 triângulos que rodeiam um diamante central. Os triângulos correspodem às áreas iniciais de cada jogador. As peças são removidas ao saltar:  saltar uma peça nossa causa a remoção da peça que foi saltada; saltar uma peça adversária permite-nos remover uma peça nossa do tabuleiro. 
+
 Na variante de apenas 2 jogadores, que vai ser implementada, os jogadores ficam com triângulos opostos e jogam alternadamente.
 É também possível executar saltos duplos e triplos numa só jogada.
 No fim do jogo cada jogador pontua 1 ponto por cada uma das suas peças fora da área inicial e 3 pontos por cada uma das suas peças dentro da sua área inicial.
-O jogador com menos pontos ganha!\linebreak\linebreak
-\includegraphics[scale=0.9]{originalBoard.png}\linebreak\linebreak
+O jogador com menos pontos ganha!\linebreak\linebreak 
+\begin{center}
+\includegraphics[scale=0.6]{originalBoard.png}\linebreak\linebreak
+\end{center}
 \includegraphics[scale=0.3]{legalMoves.PNG}\linebreak\linebreak
 \includegraphics[scale=0.3]{illegalMoves.PNG}\linebreak\linebreak
 
@@ -95,6 +99,7 @@ Tabuleiro no estado de jogo inicial:
 Tabuleiro no estado de jogo intermédio:
 \end{flushleft}
 \includegraphics[scale=0.6]{midBoard.png}\linebreak\linebreak
+\linebreak
 \begin{flushleft} 
 Tabuleiro no estado de jogo final:
 \end{flushleft}
@@ -170,7 +175,7 @@ Caso a opção 2 ou 3 seja escolhida, o programa irá perguntar qual o nível de
 \begin{flushleft} 
 Exemplo de interação com o utiizador num salto duplo:\linebreak
 \end{flushleft} 
-\includegraphics[scale=0.8]{doubleJump.png}\linebreak\linebreak
+\includegraphics[scale=0.6]{doubleJump.png}\linebreak\linebreak
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
