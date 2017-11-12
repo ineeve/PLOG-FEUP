@@ -14,7 +14,7 @@
 \setlength{\textwidth}{16cm}
 \setlength{\textheight}{22cm}
 
-\title{\Huge\textbf{Título do Trabalho}\linebreak\linebreak\linebreak
+\title{\Huge\textbf{Jogo de Tabuleiro - Campo Bello}\linebreak\linebreak\linebreak
 \Large\textbf{Relatório Final}\linebreak\linebreak
 \linebreak\linebreak
 \includegraphics[scale=0.1]{feup-logo.png}\linebreak\linebreak
@@ -92,7 +92,7 @@ Tabuleiro no estado de jogo final:
 Com o decorrer do jogo as listas perdem elementos. O estado final do jogo é alcançado quando uma das listas estiver vazia ou quando não houver mais jogadas possíveis para o jogador que vai jogar.
 
 
-\subsection{Visualização do Tabuleiro} O predicado para visualização do tabuleiro mostra as posições do tabuleiro do lado esquerdo a usar para os movimentos e do lado direito o estado atual das peças.  Usa \textit{put\_code} para melhorar o aspeto e facilitar a visualição. 
+\subsection{Visualização do Tabuleiro} O predicado para visualização do tabuleiro mostra as posições do tabuleiro do lado esquerdo a usar para os movimentos e do lado direito o estado atual das peças.  Usa \textit{put\_code} para melhorar o aspeto e facilitar a visualização. 
 
 \includegraphics[scale=0.6]{gameBoard.png}\linebreak\linebreak
 \includegraphics[scale=0.6]{displayBoard.png}\linebreak\linebreak
@@ -130,20 +130,35 @@ O nível médio do \textit{bot}, assim como qualquer jogador podem ainda fazer a
 
 E também \textit{getConsecutiveMoveForBot} (ver 3.6).
 
-\subsection{Final do Jogo} Verificação do fim do jogo, com identificação do vencedor. Exemplo: \textit{game\_over(+Board, -Winner)}.
+\subsection{Final do Jogo} Verificação do fim do jogo, com identificação do vencedor.
+O jogo acaba quando o jogador que vai jogar se encontra sem jogadas possíveis.
+\linebreak
+\includegraphics[scale=0.8]{isGameOver1.png}\linebreak\linebreak
+\includegraphics[scale=0.8]{isGameOver2.png}\linebreak\linebreak
+\includegraphics[scale=0.8]{isGameOver3.png}\linebreak\linebreak
 
-\subsection{Jogada do Computador} Escolha da jogada a efetuar pelo computador, dependendo do nível de dificuldade. Por exemplo: \textit{choose\_move(+Level, +Board, -Move)}.
+\subsection{Jogada do Computador} Escolha da jogada a efetuar pelo computador, dependendo do nível de dificuldade.
+Quando o nível de dificulade é 1 o computador apenas faz saltos simples e escolhe sempre o primeiro salto da sua lista de jogadas possíveis.\linebreak
+Quando o nível de dificuldade é 2 o computador consegue fazer saltos simples, duplos e triplos, escolhendo sempre a primeira jogada da sua lista de jogadas possíveis.\linebreak
+\includegraphics[scale=0.8]{gameBot.png}\linebreak\linebreak
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Interface com o Utilizador}
-
-Descrever o módulo de interface com o utilizador em modo de texto.
+Sempre que existe interação entre o programa e o utilizador, o programa questiona o utilizador até que este introduza uma opção válida.\linebreak
+Menu inicial: \linebreak
+\includegraphics[scale=0.8]{initialMenu.png}\linebreak\linebreak
+Caso a opção 2 ou 3 seja escolhida, o programa irá perguntar qual o nível de dificuldade para cada bot.\linebreak
+\includegraphics[scale=0.8]{chooseBotDifficulty.png}\linebreak\linebreak
+Exemplo de interação com o utiizador num salto duplo:\linebreak
+\includegraphics[scale=0.8]{doubleJump.png}\linebreak\linebreak
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusões}
-Que conclui deste projecto? Como poderia melhorar o trabalho desenvolvido?
+Prolog é uma linguagem com grande potencial e é preciso experiência para saber usá-la da melhor forma. É muito fácil escrever código repetitivo e não optimizado.
+Para melhorar o trabalho desenvolvido poderiamos melhorar a aleatoriedade das jogadas do bot de nível 1. Em relação ao bot de nível 2 poderíamos ter percorrido a sua árvore de jogadas possíveis, gerar um tabuleiro para cada jogada diferente e de seguida obter o melhor tabuleiro, aquele com menor pontuação, usando o predicado \textit{points(+Player, +PlayerMovers, -Points)}  já criado e demonstrado na secção 3.6.
 
 
 \clearpage
