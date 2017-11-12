@@ -131,7 +131,6 @@ isGameOver(y,YellowMovers,BlueMovers):-
         list_empty(Moves).
 
 /* Blue has no more options*/
-
 isGameOver(b,YellowMovers,BlueMovers):-
         getAllPossibleMoves(b,BlueMovers,YellowMovers,BlueMovers,Moves),!,
         list_empty(Moves).

@@ -76,8 +76,6 @@ http://www.campobellogame.com/
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Lógica do Jogo}
 
-Descrever o projeto e implementação da lógica do jogo em Prolog, incluindo a forma de representação do estado do tabuleiro e sua visualização, execução de movimentos, verificação do cumprimento das regras do jogo, determinação do final do jogo e cálculo das jogadas a realizar pelo computador utilizando diversos níveis de jogo. Sugere-se a estruturação desta secção da seguinte forma:
-
 \subsection{Representação do Estado do Jogo} O estado do jogo é representado por 2 listas que identificam em que posições do tabuleiro estão as peças de cada jogador (1 lista para cada jogador). As peças de cada jogador sáo designadas em Inglês por "movers".\linebreak
 \begin{flushleft} 
 Tabuleiro no estado de jogo inicial:
@@ -107,11 +105,30 @@ O resto é específico de cada linha. Eis o exemplo de uma dessas linhas:
 
 \includegraphics[scale=0.8]{displayBoard2.png}\linebreak\linebreak
 
-\subsection{Lista de Jogadas Válidas} Obtenção de uma lista de jogadas possíveis. Exemplo: \textit{valid\_moves(+Board, -ListOfMoves)}.
+\subsection{Lista de Jogadas Válidas} Na implementação do nosso jogo fizemos predicados para definir quais os saltos de peças possiveis, por exemplo estes:
 
-\subsection{Execução de Jogadas} Validação e execução de uma jogada num tabuleiro, obtendo o novo estado do jogo. Exemplo: \textit{move(+Move, +Board, -NewBoard)}.
+\includegraphics[scale=0.8]{predicados.png}\linebreak\linebreak
 
-\subsection{Avaliação do Tabuleiro} Avaliação do estado do jogo, que permitirá comparar a aplicação das diversas jogadas disponíveis. Exemplo: \textit{value(+Board, +Player, -Value)}.
+Implementamos também os seguintes predicados para obter a lista de todas as jogadas possiveis para qualquer dos jogadores ou para qualquer posição inicial, em que verifica se uma jogada é válida e adiciona-a à lista \textit{Moves}.
+\begin{center}
+\includegraphics[scale=0.7]{allpossiblemoves.png}\linebreak
+\end{center} 
+Para uma jogada ser válida vê se cumpre as regras do jogo (ver 3.4).
+
+\subsection{Execução de Jogadas} Valida uma jogada através dos predicados seguintes: 
+
+\includegraphics[scale=0.8]{isvalid.png}\linebreak\linebreak 
+Só depois executa o predicado \textit{move(+MoverPosY, +MoversPosB, +InitialPos, +JumpPos, +FinalPos, -NewMoversPosY, -NewMoversPosB, +TypeofPlayer)}, em que  \textit{TypeofPlayer} pode ser \textit{human} ou \textit{bot}, em que elimina a peça da posição onde estava e insere na sua nova posição e eliminando a peça que saltou ou eliminando outra das suas peças dependo se a peça que saltou era sua ou se era do adversário. Uma parte deste predicado:
+
+\includegraphics[scale=0.8]{move.png}\linebreak\linebreak 
+
+O nível médio do \textit{bot}, assim como qualquer jogador podem ainda fazer até três saltos consecutivos através dos seguintes predicados: 
+
+\textit{makeConsecutivePlay( +Player, +MoverPosY, +MoversPosB, +FirstInitial, +PrevFinal, -NewMoversPosY, -NewMoversPosB, +TypeofPlayer, +Count)} 
+
+\textit{readConsecutiveMove( +Player, +MoverPosY, +MoversPosB, +FirstInitial, +PrevFinal, +Jump, -Final)} 
+
+E também \textit{getConsecutiveMoveForBot} (ver 3.6).
 
 \subsection{Final do Jogo} Verificação do fim do jogo, com identificação do vencedor. Exemplo: \textit{game\_over(+Board, -Winner)}.
 
