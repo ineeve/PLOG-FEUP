@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.14)  12 NOV 2017 20:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.14)  12 NOV 2017 22:02
 entering extended mode
 **./PLOG_TP1_FINAL_Campo_Bello_4.tex
 (PLOG_TP1_FINAL_Campo_Bello_4.tex
@@ -501,283 +501,282 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 <originalBoard.png, id=18, 368.1253pt x 370.38374pt>
 File: originalBoard.png Graphic file (type png)
  <use originalBoard.png>
-Package pdftex.def Info: originalBoard.png used on input line 69.
+Package pdftex.def Info: originalBoard.png used on input line 71.
 (pdftex.def)             Requested size: 331.30971pt x 333.34227pt.
 
 <legalMoves.PNG, id=19, 1172.12906pt x 435.12563pt>
 File: legalMoves.PNG Graphic file (type png)
  <use legalMoves.PNG>
-Package pdftex.def Info: legalMoves.PNG used on input line 70.
+Package pdftex.def Info: legalMoves.PNG used on input line 72.
 (pdftex.def)             Requested size: 351.64143pt x 130.53868pt.
 
 <illegalMoves.PNG, id=20, 1157.82562pt x 544.28343pt>
 File: illegalMoves.PNG Graphic file (type png)
  <use illegalMoves.PNG>
-Package pdftex.def Info: illegalMoves.PNG used on input line 71.
+Package pdftex.def Info: illegalMoves.PNG used on input line 73.
 (pdftex.def)             Requested size: 347.35037pt x 163.28629pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--72
+Underfull \hbox (badness 10000) in paragraph at lines 64--74
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--72
+Underfull \hbox (badness 10000) in paragraph at lines 64--74
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--72
+Underfull \hbox (badness 10000) in paragraph at lines 64--74
 
  []
 
 
-Overfull \hbox (6.64143pt too wide) in paragraph at lines 62--72
+Overfull \hbox (6.64143pt too wide) in paragraph at lines 64--74
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--72
+Underfull \hbox (badness 10000) in paragraph at lines 64--74
 
  []
 
 
-Overfull \hbox (2.35037pt too wide) in paragraph at lines 62--72
+Overfull \hbox (2.35037pt too wide) in paragraph at lines 64--74
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--72
+Underfull \hbox (badness 10000) in paragraph at lines 64--74
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--72
+Underfull \hbox (badness 10000) in paragraph at lines 64--74
 
  []
 
-[4 <./originalBoard.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 79--80
+[4] [5 <./originalBoard.png> <./legalMoves.PNG>]
+Underfull \hbox (badness 10000) in paragraph at lines 81--82
 \OT1/cmr/m/n/10 de cada jo-ga-dor sao de-sig-na-das em Ingl^es por "mo-vers".
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--80
+Underfull \hbox (badness 10000) in paragraph at lines 81--82
 
  []
 
-<initialBoard.png, id=25, 585.98924pt x 36.135pt>
+<initialBoard.png, id=29, 585.98924pt x 36.135pt>
 File: initialBoard.png Graphic file (type png)
  <use initialBoard.png>
-Package pdftex.def Info: initialBoard.png used on input line 83.
+Package pdftex.def Info: initialBoard.png used on input line 85.
 (pdftex.def)             Requested size: 351.59625pt x 21.68115pt.
 
-Overfull \hbox (6.59625pt too wide) in paragraph at lines 83--84
+Overfull \hbox (6.59625pt too wide) in paragraph at lines 85--86
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 83--84
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 83--84
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
 
  []
 
-<midBoard.png, id=26, 369.17924pt x 35.53275pt>
+<midBoard.png, id=30, 369.17924pt x 35.53275pt>
 File: midBoard.png Graphic file (type png)
  <use midBoard.png>
-Package pdftex.def Info: midBoard.png used on input line 87.
+Package pdftex.def Info: midBoard.png used on input line 89.
 (pdftex.def)             Requested size: 221.50925pt x 21.3198pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
+Underfull \hbox (badness 10000) in paragraph at lines 89--90
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
+Underfull \hbox (badness 10000) in paragraph at lines 89--90
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
+Underfull \hbox (badness 10000) in paragraph at lines 89--90
 
  []
 
-<finalBoard.png, id=27, 289.68225pt x 35.53275pt>
+<finalBoard.png, id=31, 289.68225pt x 35.53275pt>
 File: finalBoard.png Graphic file (type png)
  <use finalBoard.png>
-Package pdftex.def Info: finalBoard.png used on input line 91.
+Package pdftex.def Info: finalBoard.png used on input line 93.
 (pdftex.def)             Requested size: 173.81068pt x 21.3198pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
+Underfull \hbox (badness 10000) in paragraph at lines 93--95
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
+Underfull \hbox (badness 10000) in paragraph at lines 93--95
 
  []
 
-[5 <./legalMoves.PNG> <./illegalMoves.PNG> <./initialBoard.png> <./midBoard.png
->] <gameBoard.png, id=35, 483.60675pt x 260.77425pt>
+<gameBoard.png, id=32, 483.60675pt x 260.77425pt>
 File: gameBoard.png Graphic file (type png)
  <use gameBoard.png>
-Package pdftex.def Info: gameBoard.png used on input line 97.
+Package pdftex.def Info: gameBoard.png used on input line 99.
 (pdftex.def)             Requested size: 290.16628pt x 156.46574pt.
 
-<displayBoard.png, id=36, 499.8675pt x 228.855pt>
+<displayBoard.png, id=33, 499.8675pt x 228.855pt>
 File: displayBoard.png Graphic file (type png)
  <use displayBoard.png>
-Package pdftex.def Info: displayBoard.png used on input line 98.
+Package pdftex.def Info: displayBoard.png used on input line 100.
 (pdftex.def)             Requested size: 299.9228pt x 137.31404pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 97--99
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 97--99
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 97--99
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 97--99
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 97--99
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
 
  []
 
-<displayBoard1.png, id=37, 431.211pt x 78.89474pt>
+[6 <./illegalMoves.PNG> <./initialBoard.png> <./midBoard.png> <./finalBoard.png
+>] <displayBoard1.png, id=42, 431.211pt x 78.89474pt>
 File: displayBoard1.png Graphic file (type png)
  <use displayBoard1.png>
-Package pdftex.def Info: displayBoard1.png used on input line 102.
+Package pdftex.def Info: displayBoard1.png used on input line 104.
 (pdftex.def)             Requested size: 344.96927pt x 63.11586pt.
 
-Overfull \hbox (14.96927pt too wide) in paragraph at lines 102--103
+Overfull \hbox (14.96927pt too wide) in paragraph at lines 104--105
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 102--103
+Underfull \hbox (badness 10000) in paragraph at lines 104--105
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 102--103
+Underfull \hbox (badness 10000) in paragraph at lines 104--105
 
  []
 
-<displayBoard2.png, id=38, 390.86024pt x 113.223pt>
+<displayBoard2.png, id=43, 390.86024pt x 113.223pt>
 File: displayBoard2.png Graphic file (type png)
  <use displayBoard2.png>
-Package pdftex.def Info: displayBoard2.png used on input line 106.
+Package pdftex.def Info: displayBoard2.png used on input line 108.
 (pdftex.def)             Requested size: 312.68861pt x 90.5785pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 106--107
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 106--107
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 106--107
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
 
-[6 <./finalBoard.png> <./gameBoard.png> <./displayBoard.png> <./displayBoard1.p
-ng>] <predicados.png, id=47, 211.38976pt x 56.6115pt>
+[7 <./gameBoard.png> <./displayBoard.png> <./displayBoard1.png> <./displayBoard
+2.png>] <predicados.png, id=52, 211.38976pt x 56.6115pt>
 File: predicados.png Graphic file (type png)
  <use predicados.png>
-Package pdftex.def Info: predicados.png used on input line 110.
+Package pdftex.def Info: predicados.png used on input line 112.
 (pdftex.def)             Requested size: 169.11201pt x 45.28925pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 110--111
+Underfull \hbox (badness 10000) in paragraph at lines 112--113
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 110--111
+Underfull \hbox (badness 10000) in paragraph at lines 112--113
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 110--111
+Underfull \hbox (badness 10000) in paragraph at lines 112--113
 
  []
 
-<allpossiblemoves.png, id=48, 676.929pt x 146.949pt>
+<allpossiblemoves.png, id=53, 676.929pt x 146.949pt>
 File: allpossiblemoves.png Graphic file (type png)
 
 <use allpossiblemoves.png>
-Package pdftex.def Info: allpossiblemoves.png used on input line 114.
+Package pdftex.def Info: allpossiblemoves.png used on input line 116.
 (pdftex.def)             Requested size: 473.84708pt x 102.86359pt.
 
-Overfull \hbox (128.84708pt too wide) in paragraph at lines 114--115
+Overfull \hbox (128.84708pt too wide) in paragraph at lines 116--117
  [] 
  []
 
-<isvalid.png, id=49, 475.17525pt x 187.29974pt>
+<isvalid.png, id=54, 475.17525pt x 187.29974pt>
 File: isvalid.png Graphic file (type png)
  <use isvalid.png>
-Package pdftex.def Info: isvalid.png used on input line 120.
+Package pdftex.def Info: isvalid.png used on input line 122.
 (pdftex.def)             Requested size: 380.14072pt x 149.83998pt.
 
-Overfull \hbox (50.14072pt too wide) in paragraph at lines 120--122
+Overfull \hbox (50.14072pt too wide) in paragraph at lines 122--124
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 120--122
+Underfull \hbox (badness 10000) in paragraph at lines 122--124
 
  []
 
-[7 <./displayBoard2.png> <./predicados.png> <./allpossiblemoves.png>]
-<move.png, id=57, 336.65775pt x 230.66174pt>
+<move.png, id=55, 336.65775pt x 230.66174pt>
 File: move.png Graphic file (type png)
  <use move.png>
-Package pdftex.def Info: move.png used on input line 123.
+Package pdftex.def Info: move.png used on input line 125.
 (pdftex.def)             Requested size: 269.32654pt x 184.52963pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--124
+Underfull \hbox (badness 10000) in paragraph at lines 125--126
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--124
+Underfull \hbox (badness 10000) in paragraph at lines 125--126
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--124
+Underfull \hbox (badness 10000) in paragraph at lines 125--126
 
  []
 
-
-Overfull \hbox (4.73605pt too wide) in paragraph at lines 127--128
+[8 <./predicados.png> <./allpossiblemoves.png> <./isvalid.png>]
+Overfull \hbox (4.73605pt too wide) in paragraph at lines 129--130
 \OT1/cmr/m/it/10 tial, +Prev-Fi-nal, -NewMoversPosY, -NewMoversPosB, +Ty-pe-of-
 Player, +Count) 
  []
 
 
-Overfull \hbox (48.74295pt too wide) in paragraph at lines 133--134
+Overfull \hbox (48.74295pt too wide) in paragraph at lines 137--138
 []\OT1/cmr/m/n/10 Verificac~ao do fim do jogo, com iden-ti-ficac~ao do ven-ce
 -dor. Exem-plo: \OT1/cmr/m/it/10 game[]over(+Board,
  []
 
-[8 <./isvalid.png> <./move.png>] [9]
+[9 <./move.png>]
 No file PLOG_TP1_FINAL_Campo_Bello_4.bbl.
 [10
 
@@ -785,7 +784,7 @@ No file PLOG_TP1_FINAL_Campo_Bello_4.bbl.
 Here is how much of TeX's memory you used:
  2406 strings out of 493323
  32216 string characters out of 3139065
- 97920 words of memory out of 3000000
+ 98920 words of memory out of 3000000
  5898 multiletter control sequences out of 15000+200000
  8847 words of font info for 31 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -795,7 +794,7 @@ public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
 msfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
 cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.
 pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on PLOG_TP1_FINAL_Campo_Bello_4.pdf (10 pages, 2793093 bytes).
+Output written on PLOG_TP1_FINAL_Campo_Bello_4.pdf (10 pages, 2794521 bytes).
 PDF statistics:
  86 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

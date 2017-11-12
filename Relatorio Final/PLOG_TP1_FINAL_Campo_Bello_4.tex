@@ -53,7 +53,9 @@ Resumo sucinto do trabalho com 150 a 250 palavras (problema abordado, objetivo, 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introdução}
 
-Descrever os objetivos e motivação do trabalho. Descrever num parágrafo breve a estrutura do relatório.
+O objetivo deste trabalho é implementar, em linguagem Prolog, um jogo de tabuleiro para dois jogadores e uma aplicação, em Prolog, para o jogar. O jogo permite jogar em três modos de utilização: Humano/Humano, Humano/Computador e Computador/Computador, e tem dois níveis de jogo para o Computador. 
+
+O relatório segue a seguinte estrutura: O Jogo Campo Bello, onde está descrito a história e principais regras de jogo; Lógica do Jogo, descrição do projeto e a implementação da lógica do jogo em Prolog; Interface com Utilizador, como é feita a interação Utilizador-Programa; Conclusões, principais conclusões e possíveis melhorias do trabalho desenvolvido.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,7 +130,9 @@ O nível médio do \textit{bot}, assim como qualquer jogador podem ainda fazer a
 
 \textit{readConsecutiveMove( +Player, +MoverPosY, +MoversPosB, +FirstInitial, +PrevFinal, +Jump, -Final)} 
 
-E também \textit{getConsecutiveMoveForBot} (ver 3.6).
+E também \textit{getConsecutiveMoveForBot} (ver 3.7).
+
+\subsection{Avaliação do Tabuleiro} No jogo, através do predicado \textit{points}(ver 3.6) que vê quantos pontos um jogador tem, podemos ver se uma jogada é melhor que outra comparando os pontos dos diferentes tabuleiros.
 
 \subsection{Final do Jogo} Verificação do fim do jogo, com identificação do vencedor. Exemplo: \textit{game\_over(+Board, -Winner)}.
 
