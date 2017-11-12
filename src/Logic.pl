@@ -4,18 +4,33 @@
 :- include('Board.pl').
 :- include('CLI.pl').
                                                                      
-
+% Get blue player points
 bluePlayerPoints([],0).
-bluePlayerPoints([H|T],P) :- bluePlayerPoints(T,P1), blueArea(B), member(H,B), P is P1 + 3.
-bluePlayerPoints([H|T],P) :- bluePlayerPoints(T,P1), (yellowArea(Y), member(H,Y); H==mid), P is P1 + 1.
+bluePlayerPoints([H|T],P) :- 
+        bluePlayerPoints(T,P1), blueArea(B), member(H,B), P is P1 + 3.
+bluePlayerPoints([H|T],P) :- 
+        bluePlayerPoints(T,P1),
+        (yellowArea(Y), member(H,Y); H==mid),
+        P is P1 + 1.
 
+% Get yellow player points
 yellowPlayerPoints([],0).
-yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), yellowArea(Y), member(H,Y), P is P1 + 3.
-yellowPlayerPoints([H|T],P) :- yellowPlayerPoints(T,P1), (H==mid; blueArea(B), member(H,B)), P is P1 + 1.
+yellowPlayerPoints([H|T],P) :- 
+        yellowPlayerPoints(T,P1), yellowArea(Y), member(H,Y), P is P1 + 3.
+yellowPlayerPoints([H|T],P) :- 
+        yellowPlayerPoints(T,P1),
+        (H==mid; blueArea(B), member(H,B)),
+        P is P1 + 1.
 
-points(b,BlueMoversPos,Points) :- bluePlayerPoints(BlueMoversPos,Points), write('Blue scored '), write(Points), write(' points.'),nl.
-points(y,YellowMoversPos,Points) :- yellowPlayerPoints(YellowMoversPos,Points), write('Yellow scored '), write(Points), write(' points.'),nl.
+% Calculate Points for a given player and board
+points(b,BlueMoversPos,Points) :- 
+        bluePlayerPoints(BlueMoversPos,Points),
+        write('Blue scored '), write(Points), write(' points.'),nl.
+points(y,YellowMoversPos,Points) :- 
+        yellowPlayerPoints(YellowMoversPos,Points),
+        write('Yellow scored '), write(Points), write(' points.'),nl.
 
+% Calculate who is the winner and print it
 winner(YellowMovers,BlueMovers) :- points(b,BlueMovers,BP), points(y,YellowMovers,YP), whoWins(YP,BP).
 whoWins(YP1,BP2) :- YP1 > BP2, write('Blue Player Wins'),nl.
 whoWins(YP1,BP2) :- YP1 < BP2, write('Yellow Player Wins'),nl.
