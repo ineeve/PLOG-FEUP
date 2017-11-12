@@ -23,7 +23,7 @@
 \Large{Programação em Lógica}\linebreak
 }
 
-\author{\textbf{Grupo xx:}\\ Nome 1 - Número 1 \\ Nome 2 - Número 2 \\\linebreak\linebreak \\
+\author{\textbf{Grupo 04:}\\ João Nuno Fonseca Seixas - 201505648 \\ Renato Alexandre Sousa Campos - 201504942 \\\linebreak\linebreak \\
  \\ Faculdade de Engenharia da Universidade do Porto \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal \linebreak\linebreak\linebreak
 \linebreak\linebreak\vspace{1cm}}
 %\date{Junho de 2007}
@@ -57,9 +57,20 @@ Descrever os objetivos e motivação do trabalho. Descrever num parágrafo breve
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{O Jogo XXX}
+\section{O Jogo Campo Bello}
 
-Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras. Devem ser incluídas imagens apropriadas para explicar o funcionamento do jogo. (Pode ser idêntico ao texto do relatório intercalar.)
+Campo Bello é um jogo que pode ser jogado de 2 a 4 jogadores. Tem inspiração no jogo clássico "Resta Um" ou "Peg Solitaire" em Inglês. É um jogo ainda recente, criado em 2017.
+Para ganhar, um jogador deve tentar remover todas as suas peças do tabuleiro antes dos adversários.
+O tabuleiro consiste em 4 triângulos que rodeiam um diamante central. Os triângulos correspodem às áreas iniciais de cada jogador. As peças são removidas ao saltar:  saltar uma peça nossa causa a remoção da peça que foi saltada; saltar uma peça adversária permite-nos remover uma peça nossa do tabuleiro.
+Na variante de apenas 2 jogadores, que vai ser implementada, os jogadores ficam com triângulos opostos e jogam alternadamente.
+É também possível executar saltos duplos e triplos numa só jogada.
+No fim do jogo cada jogador pontua 1 ponto por cada uma das suas peças fora da área inicial e 3 pontos por cada uma das suas peças dentro da sua área inicial.
+O jogador com menos pontos ganha!\linebreak\linebreak
+\includegraphics[scale=0.9]{originalBoard.png}\linebreak\linebreak
+\includegraphics[scale=0.3]{legalMoves.PNG}\linebreak\linebreak
+\includegraphics[scale=0.3]{illegalMoves.PNG}\linebreak\linebreak
+
+http://www.campobellogame.com/
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,9 +78,34 @@ Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras
 
 Descrever o projeto e implementação da lógica do jogo em Prolog, incluindo a forma de representação do estado do tabuleiro e sua visualização, execução de movimentos, verificação do cumprimento das regras do jogo, determinação do final do jogo e cálculo das jogadas a realizar pelo computador utilizando diversos níveis de jogo. Sugere-se a estruturação desta secção da seguinte forma:
 
-\subsection{Representação do Estado do Jogo} Pode ser idêntico ao descrito no relatório intercalar.)
+\subsection{Representação do Estado do Jogo} O estado do jogo é representado por 2 listas que identificam em que posições do tabuleiro estão as peças de cada jogador (1 lista para cada jogador). As peças de cada jogador sáo designadas em Inglês por "movers".\linebreak
+\begin{flushleft} 
+Tabuleiro no estado de jogo inicial:
+\end{flushleft}
+\includegraphics[scale=0.6]{initialBoard.png}\linebreak\linebreak
+\begin{flushleft} 
+Tabuleiro no estado de jogo intermédio:
+\end{flushleft}
+\includegraphics[scale=0.6]{midBoard.png}\linebreak\linebreak
+\begin{flushleft} 
+Tabuleiro no estado de jogo final:
+\end{flushleft}
+\includegraphics[scale=0.6]{finalBoard.png}\linebreak\linebreak 
+Com o decorrer do jogo as listas perdem elementos. O estado final do jogo é alcançado quando uma das listas estiver vazia ou quando não houver mais jogadas possíveis para o jogador que vai jogar.
 
-\subsection{Visualização do Tabuleiro} (Pode ser idêntico ao descrito no relatório intercalar.)
+
+\subsection{Visualização do Tabuleiro} O predicado para visualização do tabuleiro mostra as posições do tabuleiro do lado esquerdo a usar para os movimentos e do lado direito o estado atual das peças.  Usa \textit{put\_code} para melhorar o aspeto e facilitar a visualição. 
+
+\includegraphics[scale=0.6]{gameBoard.png}\linebreak\linebreak
+\includegraphics[scale=0.6]{displayBoard.png}\linebreak\linebreak
+
+Estes predicados encarregam-se de imprimir qual a peça do tabuleiro está naquela posição. 
+
+\includegraphics[scale=0.8]{displayBoard1.png}\linebreak\linebreak
+
+O resto é específico de cada linha. Eis o exemplo de uma dessas linhas: 
+
+\includegraphics[scale=0.8]{displayBoard2.png}\linebreak\linebreak
 
 \subsection{Lista de Jogadas Válidas} Obtenção de uma lista de jogadas possíveis. Exemplo: \textit{valid\_moves(+Board, -ListOfMoves)}.
 

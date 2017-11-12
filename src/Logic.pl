@@ -126,12 +126,13 @@ isPossibleToMoveAgain(Yi,Bi,FirstInitialPos,PrevFinalPos) :-
         NextFinalPos \= FirstInitialPos.
 
 /* Yellow has no more options*/
-isGameOver(YellowMovers,BlueMovers):-
+isGameOver(y,YellowMovers,BlueMovers):-
         getAllPossibleMoves(y,YellowMovers,YellowMovers,BlueMovers,Moves),!,
         list_empty(Moves).
 
 /* Blue has no more options*/
-isGameOver(YellowMovers,BlueMovers):-
+
+isGameOver(b,YellowMovers,BlueMovers):-
         getAllPossibleMoves(b,BlueMovers,YellowMovers,BlueMovers,Moves),!,
         list_empty(Moves).
 
@@ -221,7 +222,7 @@ getBotDiff(b,_,BDif,BDif).
 
 gameHuman(Player,Yi,Bi,Yo,Bo):-
         displayBoard(Yi,Bi),
-        \+ isGameOver(Yi,Bi),
+        \+ isGameOver(Player,Yi,Bi),
         writeWhoIsPlaying(Player,human),
         readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
         move(Yi,Bi,Initial,Jump,Final,Yo1,Bo1,human),!,
@@ -231,6 +232,7 @@ getPersonalMovers(y,Yi,_,Yi).
 getPersonalMovers(b,_,Bi,Bi).
 
 gameBot(Player,Yi,Bi,Yo,Bo,YDif,BDif):-
+        \+ isGameOver(Player,Yi,Bi),
         getBotDiff(Player,YDif,BDif,BotDiff),
         BotDiff == 1,
         displayBoard(Yi,Bi),
@@ -241,6 +243,7 @@ gameBot(Player,Yi,Bi,Yo,Bo,YDif,BDif):-
         move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot).
 
 gameBot(Player,Yi,Bi,Yo,Bo,YDif,BDif):-
+        \+ isGameOver(Player,Yi,Bi),
         getBotDiff(Player,YDif,BDif,BotDiff),
         BotDiff == 2,
         displayBoard(Yi,Bi),
@@ -253,26 +256,29 @@ gameBot(Player,Yi,Bi,Yo,Bo,YDif,BDif):-
 
 /* PC-PC */
 game(Yi,Bi,Player,3,YDific,BDific):-
+        \+ isGameOver(Player,Yi,Bi),
         gameBot(Player,Yi,Bi,Yo,Bo,YDific,BDific),
         switchPlayer(Player,NextPlayer),
         game(Yo,Bo,NextPlayer,3,YDific,BDific).
 
 /* Human-Pc*/
 game(Yi,Bi,y,2,_,BDific):-
+        \+ isGameOver(y,Yi,Bi),
         gameHuman(y,Yi,Bi,Yo,Bo),!,
         game(Yo,Bo,b,2,_,BDific).
 game(Yi,Bi,b,2,_,BDific):-
+        \+ isGameOver(b,Yi,Bi),
         gameBot(b,Yi,Bi,Yo,Bo,_,BDific),!,
         game(Yo,Bo,y,2,_,BDific).
 
 /* Player Vs Player With Possible initial moves*/
 game(Yi,Bi,Player,1,_,_) :-
+        \+ isGameOver(Player,Yi,Bi),
         gameHuman(Player,Yi,Bi,Yo,Bo),
         switchPlayer(Player,NextPlayer),
         game(Yo,Bo,NextPlayer,1,_,_).
         
 game(Yi,Bi,_,_,_,_):-
-        isGameOver(Yi,Bi),
         write('Game Over'),nl,nl,
         displayBoard(Yi,Bi),
         winner(Yi,Bi).
