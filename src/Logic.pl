@@ -229,7 +229,7 @@ gameHuman(Player,Yi,Bi,Yo,Bo):-
 getPersonalMovers(y,Yi,_,Yi).
 getPersonalMovers(b,_,Bi,Bi).
 
-gameBot(Player,Yi,Bi,Yo,Bo,BDif,YDif):-
+gameBot(Player,Yi,Bi,Yo,Bo,YDif,BDif):-
         getBotDiff(Player,YDif,BDif,BotDiff),
         BotDiff == 1,
         displayBoard(Yi,Bi),
@@ -239,7 +239,7 @@ gameBot(Player,Yi,Bi,Yo,Bo,BDif,YDif):-
         write('Moving '), write(Start), write(' To '), write(Final),nl,
         move(Yi,Bi,Start,Mid,Final,Yo,Bo,bot).
 
-gameBot(Player,Yi,Bi,Yo,Bo,BDif,YDif):-
+gameBot(Player,Yi,Bi,Yo,Bo,YDif,BDif):-
         getBotDiff(Player,YDif,BDif,BotDiff),
         BotDiff == 2,
         displayBoard(Yi,Bi),
