@@ -259,7 +259,7 @@ game(Yi,Bi,y,2,_,BDific):-
         gameHuman(y,Yi,Bi,Yo,Bo),
         game(Yo,Bo,b,2,_,BDific).
 game(Yi,Bi,b,2,_,BDific):-
-        gameBot(b,Yi,Bi,Yo,Bo,BDific,_),
+        gameBot(b,Yi,Bi,Yo,Bo,_,BDific),
         game(Yo,Bo,y,2,_,BDific).
 
 /* Player Vs Player With Possible initial moves*/
