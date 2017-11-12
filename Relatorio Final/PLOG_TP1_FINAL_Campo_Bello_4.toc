@@ -8,8 +8,6 @@
 \contentsline {subsection}{\numberline {3.4}Execu\IeC {\c c}\IeC {\~a}o de Jogadas}{8}
 \contentsline {subsection}{\numberline {3.5}Avalia\IeC {\c c}\IeC {\~a}o do Tabuleiro}{9}
 \contentsline {subsection}{\numberline {3.6}Final do Jogo}{9}
-\contentsline {subsection}{\numberline {3.7}Jogada do Computador}{9}
-\contentsline {section}{\numberline {4}Interface com o Utilizador}{9}
-\contentsline {section}{\numberline {5}Conclus\IeC {\~o}es}{9}
-\contentsline {section}{Bibliografia}{10}
-\contentsline {section}{\numberline {A}Nome do Anexo}{10}
+\contentsline {subsection}{\numberline {3.7}Jogada do Computador}{10}
+\contentsline {section}{\numberline {4}Interface com o Utilizador}{11}
+\contentsline {section}{\numberline {5}Conclus\IeC {\~o}es}{12}
