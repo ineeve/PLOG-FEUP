@@ -11,5 +11,3 @@
 \contentsline {subsection}{\numberline {3.7}Jogada do Computador}{10}
 \contentsline {section}{\numberline {4}Interface com o Utilizador}{11}
 \contentsline {section}{\numberline {5}Conclus\IeC {\~o}es}{12}
-\contentsline {section}{Bibliografia}{13}
-\contentsline {section}{\numberline {A}Nome do Anexo}{13}
