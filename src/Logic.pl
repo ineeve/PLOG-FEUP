@@ -141,7 +141,7 @@ list_empty([_|_]):- fail.
 
 
 getAllPossibleMovesAux(Player, [Start|Tail],Yi, Bi, CalcMoves, Moves) :-
-        isValid(Player,Yi,Bi,Start, Mid, Final),
+        isValid(Player,Yi,Bi,Start, Mid, Final),!,
         getAllPossibleMovesAux(Player,Tail,Yi,Bi,[[Start,Final,Mid]|CalcMoves], Moves).
         
 /* Used when previous condition fails*/        
@@ -150,7 +150,7 @@ getAllPossibleMovesAux(Player,[_|Tail],Yi,Bi,CalcMoves,Moves):- getAllPossibleMo
 getAllPossibleMovesAux(_,[],_,_,Moves,Moves).
 
 getAllPossibleMoves(Player,StartingPositions,YMovers,BMovers,Moves):-
-        getAllPossibleMovesAux(Player,StartingPositions,YMovers,BMovers,[],Moves).
+        getAllPossibleMovesAux(Player,StartingPositions,YMovers,BMovers,[],Moves),!.
 
 
 switchPlayer(y, b).
@@ -166,7 +166,6 @@ readConsecutiveMove(Player,Yi,Bi,FirstInitial,PrevFinal,Jump,Final):-
         !.
 
 continuePlaying(y).
-continuePlaying(n) :- fail.
 
 getConsecutiveMoveForBot(FirstInitial,[[_,NextFinal,NextMid]|_],NextMid,NextFinal):-
         NextFinal \= FirstInitial.
@@ -180,27 +179,31 @@ getConsecutiveMoveForBot(_,[],_,_):- fail.
 validateYesOrNo(y).
 validateYesOrNo(n).
 
-makeConsecutivePlay(Player,Yi,Bi,FirstInitial,PrevFinal,Yo,Bo,bot):-
+makeConsecutivePlay(Player,Yi,Bi,FirstInitial,PrevFinal,Yo,Bo,bot,Count):-
+        Count < 3,
         write('Checking for available next moves'),nl,
         getAllPossibleMoves(Player,[PrevFinal],Yi,Bi,Moves),
         getConsecutiveMoveForBot(FirstInitial,Moves,NextMid,NextFinal),
-        move(Yi,Bi,PrevFinal,NextMid,NextFinal,Yo,Bo,bot),
-        write('Moving from '), write(PrevFinal), write(' to '), write(NextFinal),nl.
+        write('Moving from '), write(PrevFinal), write(' to '), write(NextFinal),nl,
+        move(Yi,Bi,PrevFinal,NextMid,NextFinal,Yo2,Bo2,bot),!,
+        makeConsecutivePlay(Player,Yo2,Bo2,FirstInitial,NextFinal,Yo,Bo,bot,Count + 1).
 
-makeConsecutivePlay(Player,Yi,Bi,FirstInitial,PrevFinal,Yo,Bo,human):-
+makeConsecutivePlay(Player,Yi,Bi,FirstInitial,PrevFinal,Yo,Bo,human,Count):-
+        Count < 3,
         write('Checking for available next moves'),nl,
         getAllPossibleMoves(Player,[PrevFinal],Yi,Bi,Moves),
         \+ list_empty(Moves),
-        repeat,
-        write('Continue Playing? (y/n)'),
-        read(IsToContinue),nl,
-        validateYesOrNo(IsToContinue),!,
+        write('Continue Playing? (y/n)'),nl,
+        read(IsToContinue),
         continuePlaying(IsToContinue),
         readConsecutiveMove(Player,Yi,Bi,FirstInitial,PrevFinal,NextJump,NextFinal),
-        move(Yi,Bi,PrevFinal,NextJump,NextFinal,Yo,Bo,human).
+        move(Yi,Bi,PrevFinal,NextJump,NextFinal,Yo2,Bo2,human),!,
+        makeConsecutivePlay(Player,Yo2,Bo2,FirstInitial,NextFinal,Yo,Bo,human,Count + 1).
+        
 
-makeConsecutivePlay(_,Yi,Bi,_,_,Yi,Bi,_):-
+makeConsecutivePlay(_,Yi,Bi,_,_,Yi,Bi,_,_):-
         write('No more moves available'),nl.
+
 
 writeWhoIsPlaying(b, human):-
         write('Blue Human Turn'),nl.
@@ -221,8 +224,8 @@ gameHuman(Player,Yi,Bi,Yo,Bo):-
         \+ isGameOver(Yi,Bi),
         writeWhoIsPlaying(Player,human),
         readValidPlay(Initial,Jump,Final,Yi,Bi,Player),
-        move(Yi,Bi,Initial,Jump,Final,Yo1,Bo1,human),
-        makeConsecutivePlay(Player,Yo1,Bo1,Initial,Final,Yo,Bo,human).
+        move(Yi,Bi,Initial,Jump,Final,Yo1,Bo1,human),!,
+        makeConsecutivePlay(Player,Yo1,Bo1,Initial,Final,Yo,Bo,human,1).
 
 getPersonalMovers(y,Yi,_,Yi).
 getPersonalMovers(b,_,Bi,Bi).
@@ -246,7 +249,7 @@ gameBot(Player,Yi,Bi,Yo,Bo,YDif,BDif):-
         getAllPossibleMoves(Player,MyMovers,Yi,Bi,[[Start,Final,Mid] | _]),
         write('Moving '), write(Start), write(' To '), write(Final),nl,
         move(Yi,Bi,Start,Mid,Final,Yo1,Bo1,bot),
-        makeConsecutivePlay(Player,Yo1,Bo1,Start,Final,Yo,Bo,bot).
+        makeConsecutivePlay(Player,Yo1,Bo1,Start,Final,Yo,Bo,bot,1).
 
 /* PC-PC */
 game(Yi,Bi,Player,3,YDific,BDific):-
@@ -256,10 +259,10 @@ game(Yi,Bi,Player,3,YDific,BDific):-
 
 /* Human-Pc*/
 game(Yi,Bi,y,2,_,BDific):-
-        gameHuman(y,Yi,Bi,Yo,Bo),
+        gameHuman(y,Yi,Bi,Yo,Bo),!,
         game(Yo,Bo,b,2,_,BDific).
 game(Yi,Bi,b,2,_,BDific):-
-        gameBot(b,Yi,Bi,Yo,Bo,_,BDific),
+        gameBot(b,Yi,Bi,Yo,Bo,_,BDific),!,
         game(Yo,Bo,y,2,_,BDific).
 
 /* Player Vs Player With Possible initial moves*/
