@@ -41,7 +41,12 @@ restrictEndTimes([task(Id,_,Dur,_)|Others],StartTimes,EndTimes):-
         restrictEndTimes(Others,StartTimes,EndTimes).
 restrictEndTimes([],_,_).
 
-restrictMachines(Tasks,Machines,StartTimes,EndTimes).
+restrictMachines([task(Task1Id,_,Dur1,Mach1Id),task(Task2Id,Task2Type,Dur2,Mach2Id)|Others],Machines,StartTimes,EndTimes):-
+        element(Task1Id,StartTimes,ST1),
+        element(Task2Id,StartTimes,ST2),
+        disjoint2([f(ST1,Dur1,Mach1Id,0),f(ST2,Dur2,Mach2Id,0)]),
+        restrictMachines([task(Task2Id,Task2Type,Dur2,Mach2Id)|Others],Machines,StartTimes,EndTimes).
+restrictMachines([_],_,_,_).
 
 start(ST) :- tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Machines,Tasks,Operations,ST).
 
