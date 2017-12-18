@@ -12,6 +12,23 @@ operations([[1,3,5],[2,4]]).
 
 %---------------------------------------------CODE------------------------------------
 
+getMachinesByType([],_,MachinesOut,MachinesOut).
+
+getMachinesByType([machine(Id,Type)|OtherMachines],Type,MachinesOut,Aux):-
+        append(Aux,Id,Aux2),
+        getMachinesByType(OtherMachines,Type,MachinesOut,Aux2).
+
+getMachinesByType([machine(_,_)|OtherMachines],Type,MachinesOut,Aux):-
+        getMachinesByType(OtherMachines,Type,MachinesOut,Aux).
+        
+assignMachines([task(_,TaskType,_,MachineRef)|OtherTasks],Machines):-
+        getMachinesByType(Machines,TaskType,SelectedMachines,[]),
+        list_to_fdset(SelectedMachines,FD),
+        MachineRef in_set FD,
+        assignMachines(OtherTasks,Machines).
+        
+assignMachines([],_).
+
 %getTaskDuration(+Tasks,+Id,-Task)
 getTask([task(Id,Type,Duration,Machine)|_],Id,task(Id,Type,Duration,Machine)).
 getTask([_|TT],Id,Task):-
@@ -58,6 +75,7 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         restrictStartTimes(StartTimes,Sum),
         restrictEndTimes(Tasks,StartTimes,EndTimes),
         restrictOperations(Tasks,StartTimes,Operations),
+        assignMachines(Tasks,Machines),
         restrictMachines(Tasks,Machines,StartTimes,EndTimes),
         maximum(End,EndTimes),
         labeling(minimize(End),StartTimes).
