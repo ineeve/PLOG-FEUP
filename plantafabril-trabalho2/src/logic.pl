@@ -18,8 +18,8 @@ restrictOperations(_,_,[]).
 restrictOperations(Tasks,S,[[_]|ROps]):- restrictOperations(Tasks,S,ROps).
 restrictOperations(Tasks,S, [[Task1Id, Task2Id|R]|ROps]):-
         getTask(Tasks,Task1Id,task(Task1Id,_,Dur1,_)),
-        element(ST1,S,Task1Id),
-        element(ST2,S,Task2Id),
+        element(Task1Id,S,ST1),
+        element(Task2Id,S,ST2),
         ST1+Dur1 #=< ST2,
         restrictOperations(Tasks,S, [[Task2Id|R]|ROps]).
 
