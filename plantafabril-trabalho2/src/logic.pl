@@ -1,5 +1,6 @@
 :- use_module(library(clpfd)).
 
+%---------------------------------------------FACTS------------------------------------
 %machines: [machine(id,TaskType1)]
 machines([machine(1,type1),machine(2,type2)]).
 
@@ -8,6 +9,8 @@ tasks([task(1,type1,10,_),task(2,type1,5,_),task(3,type2,4,_),task(4,type1,2,_),
 
 %operations: [[task1,task3,task2],[task4,task5,task6]),...]
 operations([[1,3,5],[2,4]]).
+
+%---------------------------------------------CODE------------------------------------
 
 %getTaskDuration(+Tasks,+Id,-Task)
 getTask([task(Id,Type,Duration,Machine)|_],Id,task(Id,Type,Duration,Machine)).
@@ -31,14 +34,26 @@ sumDurations([],Sum,Sum).
 restrictStartTimes(StartTimes,Sum):-
         domain(StartTimes,0,Sum).
 
+restrictEndTimes([task(Id,_,Dur,_)|Others],StartTimes,EndTimes):-
+        element(Id,StartTimes,TaskST),
+        element(Id,EndTimes,TaskET),
+        TaskET #= TaskST + Dur,
+        restrictEndTimes(Others,StartTimes,EndTimes).
+restrictEndTimes([],_,_).
+
 start(ST) :- tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Machines,Tasks,Operations,ST).
 
 plantaFabril(_,Tasks,Operations,StartTimes):-
+        length(EndTimes,NumTasks),
         length(Tasks,NumTasks),
         length(StartTimes,NumTasks),
         sumDurations(Tasks,Sum,0),
         restrictStartTimes(StartTimes,Sum),
-        restrictOperations(Tasks,StartTimes,Operations).
+        restrictEndTimes(Tasks,StartTimes,EndTimes),
+        restrictOperations(Tasks,StartTimes,Operations),
+        maximum(End,EndTimes),
+        labeling(minimize(End),StartTimes).
+        
         
 
 
