@@ -1,24 +1,47 @@
 :- use_module(library(clpfd)).
 
-%machines: [machine(id,TaskType1),..] needsHuman is 0 || 1
-%tasks: [task(id,typeId,duration,MachineRef),...] HumanRef is 0 if no Human was needed
-%operations: [[task1,task3,task2],[task4,task5,task6]),...]
-
-
+%machines: [machine(id,TaskType1)]
 machines([machine(1,type1),machine(2,type2)]).
-tasks([task(1,type1,10,_),task(2,type1,5,_),task(3,type2,4),task(4,type1,2),task(5,type2,3)]).
+
+%tasks: [task(id,TypeId,Duration,MachineRef),...]
+tasks([task(1,type1,10,_),task(2,type1,5,_),task(3,type2,4,_),task(4,type1,2,_),task(5,type2,3,_)]).
+
+%operations: [[task1,task3,task2],[task4,task5,task6]),...]
 operations([[1,3,5],[2,4]]).
-startTimes(_,_,_,_,_).
+
+%getTaskDuration(+Tasks,+Id,-Task)
+getTask([task(Id,Type,Duration,Machine)|_],Id,task(Id,Type,Duration,Machine)).
+getTask([_|TT],Id,Task):-
+        getTask(TT,Id,Task).
+
+restrictOperations(_,_,[]).
+restrictOperations(Tasks,S,[[_]|ROps]):- restrictOperations(Tasks,S,ROps).
+restrictOperations(Tasks,S, [[Task1Id, Task2Id|R]|ROps]):-
+        getTask(Tasks,Task1Id,task(Task1Id,_,Dur1,_)),
+        element(ST1,S,Task1Id),
+        element(ST2,S,Task2Id),
+        ST1+Dur1 #=< ST2,
+        restrictOperations(Tasks,S, [[Task2Id|R]|ROps]).
+
+sumDurations([task(_,_,Dur1,_)|Others],Sum,Accumulator):-
+        Accumulator2 is Accumulator + Dur1,
+        sumDurations(Others,Sum,Accumulator2).
+sumDurations([],Sum,Sum).
+
+restrictStartTimes(StartTimes,Sum):-
+        domain(StartTimes,0,Sum).
+
+start(ST) :- tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Machines,Tasks,Operations,ST).
+
+plantaFabril(_,Tasks,Operations,StartTimes):-
+        length(Tasks,NumTasks),
+        length(StartTimes,NumTasks),
+        sumDurations(Tasks,Sum,0),
+        restrictStartTimes(StartTimes,Sum),
+        restrictOperations(Tasks,StartTimes,Operations).
+        
 
 
-checkOp(_,_,[]).
-checkOp(S,E,[[_]|ROps]):- checkOp(S,E,ROps).
-checkOp(S,E,[[_,_]|ROps]) :- checkOp(S, E, ROps).
-checkOp(S, E, [[Id1,Task1, Task2|R]|ROps]):-
-        element(ST2,S,Task2),
-        element(ET1,E,Task1),
-        ET1 #<= ST2,
-        checkOp(S, E, [[Id1|R]|ROps]).
 
 
 
