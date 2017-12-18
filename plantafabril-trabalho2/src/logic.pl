@@ -41,9 +41,11 @@ restrictEndTimes([task(Id,_,Dur,_)|Others],StartTimes,EndTimes):-
         restrictEndTimes(Others,StartTimes,EndTimes).
 restrictEndTimes([],_,_).
 
+restrictMachines(Tasks,Machines,StartTimes,EndTimes).
+
 start(ST) :- tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Machines,Tasks,Operations,ST).
 
-plantaFabril(_,Tasks,Operations,StartTimes):-
+plantaFabril(Machines,Tasks,Operations,StartTimes):-
         length(EndTimes,NumTasks),
         length(Tasks,NumTasks),
         length(StartTimes,NumTasks),
@@ -51,6 +53,7 @@ plantaFabril(_,Tasks,Operations,StartTimes):-
         restrictStartTimes(StartTimes,Sum),
         restrictEndTimes(Tasks,StartTimes,EndTimes),
         restrictOperations(Tasks,StartTimes,Operations),
+        restrictMachines(Tasks,Machines,StartTimes,EndTimes),
         maximum(End,EndTimes),
         labeling(minimize(End),StartTimes).
         
