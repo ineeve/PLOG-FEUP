@@ -16,7 +16,7 @@ operations([[1,3,5],[2,4]]).
 getMachinesByType([],_,MachinesOut,MachinesOut).
 
 getMachinesByType([machine(Id,Type)|OtherMachines],Type,MachinesOut,Aux):-
-        append(Aux,Id,Aux2),
+        append(Aux,[Id],Aux2),
         getMachinesByType(OtherMachines,Type,MachinesOut,Aux2).
 
 getMachinesByType([machine(_,_)|OtherMachines],Type,MachinesOut,Aux):-
@@ -64,6 +64,12 @@ restrictMachines([task(Task1Id,_,Dur1,Mach1Id)|Others], RM, Machines, StartTimes
         element(Task1Id,StartTimes,ST1),
         restrictMachines(Others, [f(ST1,Dur1,Mach1Id,1)| RM], Machines, StartTimes, EndTimes).
 
+getMachinesUsed([task(_,_,_,Machine)|T],Machines,Aux):-
+        append(Aux,[Machine],Aux2),
+        getMachinesUsed(T,Machines,Aux2).
+
+getMachinesUsed([],Machines,Machines).
+
 start(ST) :- tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Machines,Tasks,Operations,ST).
 
 plantaFabril(Machines,Tasks,Operations,StartTimes):-
@@ -77,31 +83,15 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         assignMachines(Tasks,Machines),
         restrictMachines(Tasks, [],Machines,StartTimes,EndTimes),
         maximum(End,EndTimes),
-        labeling(minimize(End),StartTimes).
+        getMachinesUsed(Tasks,MachinesOut,[]),
+        append(StartTimes,MachinesOut,Vars),
+        labeling(minimize(End),Vars),
+        printSolution(Tasks,StartTimes,1,End).
         
-        
-
-
-
-
-
-
-/*
-scheduleOP(Ss, End) :-
-        Ss = [S1,S2,S3,S4,S5,S6,S7],
-        Es = [E1,E2,E3,E4,E5,E6,E7],
-        Tasks = [
-                task(S1, 16, E1, 2, 1),
-                task(S2, 6, E2, 9, 2),
-                task(S3, 13, E3, 3, 1),
-                task(S4, 7, E4, 7, 2),
-                task(S5, 5, E5, 10, 1),
-                task(S6, 18, E6, 1, 1,2),
-                task(S7, 4, E7, 11, 1)
-        ],
-        Machines = [machine(1,12), machine(2,10)],
-        domain(Ss, 1, 100),
-        maximum(End, Es),
-        cumulatives(Tasks, Machines, [bound(upper)]),
-        labeling([minimize(End)], Ss).
-*/
+printSolution(_,[], _,End):- write('End time is: '), write(End), nl.
+printSolution(Tasks,[H|T], I,End) :-
+        getTask(Tasks,I,task(I,_,Dur,Machine)),
+        EndTask #= H + Dur,
+        write('Task '), write(I), write(' starts at '),
+        write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine),
+        nl, Y #= I+1, printSolution(Tasks,T, Y,End). 
