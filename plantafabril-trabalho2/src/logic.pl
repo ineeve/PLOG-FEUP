@@ -8,7 +8,14 @@
 
 %optimizar(humans,machines,tasks,operations).
 
-
+checkOp(_,_,[]).
+checkOp(S,E,[[_]|ROps]):- checkOp(S,E,ROps).
+checkOp(S,E,[[_,_]|ROps]) :- checkOp(S, E, ROps).
+checkOp(S, E, [[Id1,Task1, Task2|R]|ROps]):-
+        element(ST2,S,Task2),
+        element(ET1,E,Task1),
+        ET1 #<= ST2,
+        checkOp(S, E, [[Id1|R]|ROps]).
 
 scheduleOP(Ss, End) :-
         Ss = [S1,S2,S3,S4,S5,S6,S7],
