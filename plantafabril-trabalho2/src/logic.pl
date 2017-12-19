@@ -3,7 +3,7 @@
 
 %---------------------------------------------FACTS------------------------------------
 %machines: [machine(id,TaskType1,ListOfHumansThatCanOperate)]
-machines([machine(1,type1,[1,3]),machine(2,type2,[1,2])]).
+machines([machine(1,type1,[1,4]),machine(2,type2,[1])]).
 
 %tasks: [task(id,TypeId,Duration,MachineRef,HumanRef),...]
 tasks([task(1,type1,10,_,_),task(2,type1,5,_,_),task(3,type2,4,_,_),task(4,type1,2,_,_),task(5,type2,3,_,_)]).
@@ -74,10 +74,15 @@ restrictEndTimes([task(Id,_,Dur,_,_)|Others],StartTimes,EndTimes):-
         restrictEndTimes(Others,StartTimes,EndTimes).
 restrictEndTimes([],_,_).
 
-restrictMachines([], RM, _, _, _):- disjoint2(RM).
-restrictMachines([task(Task1Id,_,Dur1,Mach1Id,_)|Others], RM, Machines, StartTimes, EndTimes):-
+restrictMachines([], RM, _, _):- disjoint2(RM).
+restrictMachines([task(Task1Id,_,Dur1,Mach1Id,_)|Others], RM, Machines, StartTimes):-
         element(Task1Id,StartTimes,ST1),
-        restrictMachines(Others, [f(ST1,Dur1,Mach1Id,1)| RM], Machines, StartTimes, EndTimes).
+        restrictMachines(Others, [f(ST1,Dur1,Mach1Id,1)| RM], Machines, StartTimes).
+
+restrictHumans([],RH,_,_):- disjoint2(RH).
+restrictHumans([task(Task1Id,_,Dur1,_,Human1Id)|Others],RH,Machines,StartTimes):-
+        element(Task1Id,StartTimes,ST1),
+        restrictHumans(Others,[f(ST1,Dur1,Human1Id,1)|RH],Machines,StartTimes).
 
 getMachinesAndHumansVars([task(_,_,_,Machine,Human)|T],MachinesAndHumans,Aux):-
         append(Aux,[Machine,Human],Aux2),
@@ -96,8 +101,9 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         restrictEndTimes(Tasks,StartTimes,EndTimes),
         restrictOperations(Tasks,StartTimes,Operations),
         assignMachines(Tasks,Machines),
-        restrictMachines(Tasks, [],Machines,StartTimes,EndTimes),
+        restrictMachines(Tasks, [],Machines,StartTimes),
         assignHumans(Tasks,Machines),
+        restrictHumans(Tasks,[], Machines,StartTimes),
         maximum(End,EndTimes),
         getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
         append(StartTimes,MachinesAndHumans,Vars),
