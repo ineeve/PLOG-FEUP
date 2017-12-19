@@ -3,7 +3,7 @@
 
 %---------------------------------------------FACTS------------------------------------
 %machines: [machine(id,TaskType1,ListOfHumansThatCanOperate)]
-machines([machine(1,type1,[1,4]),machine(2,type2,[1])]).
+machines([machine(1,type1,[1,4]),machine(2,type2,[0])]).
 
 %tasks: [task(id,TypeId,Duration,MachineRef,HumanRef),...]
 tasks([task(1,type1,10,_,_),task(2,type1,5,_,_),task(3,type2,4,_,_),task(4,type1,2,_,_),task(5,type2,3,_,_)]).
@@ -80,6 +80,8 @@ restrictMachines([task(Task1Id,_,Dur1,Mach1Id,_)|Others], RM, Machines, StartTim
         restrictMachines(Others, [f(ST1,Dur1,Mach1Id,1)| RM], Machines, StartTimes).
 
 restrictHumans([],RH,_,_):- disjoint2(RH).
+restrictHumans([task(_,_,_,_,0)|Others],RH,Machines,StartTimes):-
+        restrictHumans(Others,RH,Machines,StartTimes).
 restrictHumans([task(Task1Id,_,Dur1,_,Human1Id)|Others],RH,Machines,StartTimes):-
         element(Task1Id,StartTimes,ST1),
         restrictHumans(Others,[f(ST1,Dur1,Human1Id,1)|RH],Machines,StartTimes).
