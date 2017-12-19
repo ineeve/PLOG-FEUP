@@ -92,7 +92,24 @@ getMachinesAndHumansVars([task(_,_,_,Machine,Human)|T],MachinesAndHumans,Aux):-
 
 getMachinesAndHumansVars([],Machines,Machines).
 
-start(ST) :- tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Machines,Tasks,Operations,ST).
+
+printWelcome :- write('Welcome to Planta Fabril Project'),nl.
+
+readMachines(Machines,Increment):-
+        write('Add a Machine (y/n)'),
+        read(y),
+        write('Task type: '),
+        read(TaskType),nl,
+        write('Add Humans (y/n): '),
+        readHumans(Humans).
+
+getData(Tasks,Operations,Machines):-
+        readMachines(Machines,0),
+        readTasks(Tasks),
+        readOperations(Operations).
+        
+
+start(ST) :- printWelcome, getData(Tasks,Operations,Machines), plantaFabril(Machines,Tasks,Operations,ST).
 
 plantaFabril(Machines,Tasks,Operations,StartTimes):-
         length(EndTimes,NumTasks),
