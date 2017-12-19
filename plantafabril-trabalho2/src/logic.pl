@@ -2,14 +2,11 @@
 :- use_module(library(lists)).
 
 %---------------------------------------------FACTS------------------------------------
-%humans: [human(id,ListOfOperableMachines)]
-humans([human(1,[1]),human(2,[2]),human(3,[1,2])]).
+%machines: [machine(id,TaskType1,ListOfHumansThatCanOperate)]
+machines([machine(1,type1,[1,3]),machine(2,type2,[1,2])]).
 
-%machines: [machine(id,TaskType1,NumResources)]
-machines([machine(1,type1,0),machine(2,type2,1),machine(3,type1,1)]).
-
-%tasks: [task(id,TypeId,Duration,MachineRef),...]
-tasks([task(1,type1,10,_),task(2,type1,5,_),task(3,type2,4,_),task(4,type1,2,_),task(5,type2,3,_),task(6,type1,4,_)]).
+%tasks: [task(id,TypeId,Duration,MachineRef,HumanRef),...]
+tasks([task(1,type1,10,_,_),task(2,type1,5,_,_),task(3,type2,4,_,_),task(4,type1,2,_,_),task(5,type2,3,_,_)]).
 
 %operations: [[task1,task3,task2],[task4,task5,task6]),...]
 operations([[1,3,5],[2,4]]).
@@ -25,7 +22,7 @@ getMachinesByType([machine(Id,Type,_)|OtherMachines],Type,MachinesOut,Aux):-
 getMachinesByType([machine(_,_,_)|OtherMachines],Type,MachinesOut,Aux):-
         getMachinesByType(OtherMachines,Type,MachinesOut,Aux).
         
-assignMachines([task(_,TaskType,_,MachineRef)|OtherTasks],Machines):-
+assignMachines([task(_,TaskType,_,MachineRef,_)|OtherTasks],Machines):-
         getMachinesByType(Machines,TaskType,SelectedMachines,[]),
         list_to_fdset(SelectedMachines,FD),
         MachineRef in_set FD,
@@ -33,21 +30,36 @@ assignMachines([task(_,TaskType,_,MachineRef)|OtherTasks],Machines):-
         
 assignMachines([],_).
 
-%getTaskDuration(+Tasks,+Id,-Task)
-getTask([task(Id,Type,Duration,Machine)|_],Id,task(Id,Type,Duration,Machine)).
+getMachineById([machine(ID,Type,Humans)|_],ID,machine(ID,Type,Humans)).
+getMachineById([machine(_,_,_)|OtherMachines],ID,Machine):-
+        getMachineById(OtherMachines,ID,Machine).
+
+%getListOfHumansForMachine(+Machine,-HumansList)
+getListOfHumansForMachine(machine(_,_,HumansList),HumansList).
+
+assignHumans([task(_,_,_,MachineRef,HumanRef)|OtherTasks],AllMachines):-
+        getMachineById(AllMachines,MachineRef,TheMachine),
+        getListOfHumansForMachine(TheMachine,HumansForMachine),
+        list_to_fdset(HumansForMachine,FD),
+        HumanRef in_set FD,
+        assignHumans(OtherTasks,AllMachines).
+assignHumans([],_).
+
+%getTask(+Tasks,+Id,-Task)
+getTask([task(Id,Type,Duration,Machine,Human)|_],Id,task(Id,Type,Duration,Machine,Human)).
 getTask([_|TT],Id,Task):-
         getTask(TT,Id,Task).
 
 restrictOperations(_,_,[]).
 restrictOperations(Tasks,S,[[_]|ROps]):- restrictOperations(Tasks,S,ROps).
 restrictOperations(Tasks,S, [[Task1Id, Task2Id|R]|ROps]):-
-        getTask(Tasks,Task1Id,task(Task1Id,_,Dur1,_)),
+        getTask(Tasks,Task1Id,task(Task1Id,_,Dur1,_,_)),
         element(Task1Id,S,ST1),
         element(Task2Id,S,ST2),
         ST1+Dur1 #=< ST2,
         restrictOperations(Tasks,S, [[Task2Id|R]|ROps]).
 
-sumDurations([task(_,_,Dur1,_)|Others],Sum,Accumulator):-
+sumDurations([task(_,_,Dur1,_,_)|Others],Sum,Accumulator):-
         Accumulator2 is Accumulator + Dur1,
         sumDurations(Others,Sum,Accumulator2).
 sumDurations([],Sum,Sum).
@@ -55,7 +67,7 @@ sumDurations([],Sum,Sum).
 restrictStartTimes(StartTimes,Sum):-
         domain(StartTimes,0,Sum).
 
-restrictEndTimes([task(Id,_,Dur,_)|Others],StartTimes,EndTimes):-
+restrictEndTimes([task(Id,_,Dur,_,_)|Others],StartTimes,EndTimes):-
         element(Id,StartTimes,TaskST),
         element(Id,EndTimes,TaskET),
         TaskET #= TaskST + Dur,
@@ -63,19 +75,19 @@ restrictEndTimes([task(Id,_,Dur,_)|Others],StartTimes,EndTimes):-
 restrictEndTimes([],_,_).
 
 restrictMachines([], RM, _, _, _):- disjoint2(RM).
-restrictMachines([task(Task1Id,_,Dur1,Mach1Id)|Others], RM, Machines, StartTimes, EndTimes):-
+restrictMachines([task(Task1Id,_,Dur1,Mach1Id,_)|Others], RM, Machines, StartTimes, EndTimes):-
         element(Task1Id,StartTimes,ST1),
         restrictMachines(Others, [f(ST1,Dur1,Mach1Id,1)| RM], Machines, StartTimes, EndTimes).
 
-getMachinesUsed([task(_,_,_,Machine)|T],Machines,Aux):-
-        append(Aux,[Machine],Aux2),
-        getMachinesUsed(T,Machines,Aux2).
+getMachinesAndHumansVars([task(_,_,_,Machine,Human)|T],MachinesAndHumans,Aux):-
+        append(Aux,[Machine,Human],Aux2),
+        getMachinesAndHumansVars(T,MachinesAndHumans,Aux2).
 
-getMachinesUsed([],Machines,Machines).
+getMachinesAndHumansVars([],Machines,Machines).
 
-start(ST) :- humans(Humans),tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Humans,Machines,Tasks,Operations,ST).
+start(ST) :- tasks(Tasks),operations(Operations),machines(Machines), plantaFabril(Machines,Tasks,Operations,ST).
 
-plantaFabril(Humans,Machines,Tasks,Operations,StartTimes):-
+plantaFabril(Machines,Tasks,Operations,StartTimes):-
         length(EndTimes,NumTasks),
         length(Tasks,NumTasks),
         length(StartTimes,NumTasks),
@@ -85,16 +97,17 @@ plantaFabril(Humans,Machines,Tasks,Operations,StartTimes):-
         restrictOperations(Tasks,StartTimes,Operations),
         assignMachines(Tasks,Machines),
         restrictMachines(Tasks, [],Machines,StartTimes,EndTimes),
+        assignHumans(Tasks,Machines),
         maximum(End,EndTimes),
-        getMachinesUsed(Tasks,MachinesOut,[]),
-        append(StartTimes,MachinesOut,Vars),
+        getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
+        append(StartTimes,MachinesAndHumans,Vars),
         labeling(minimize(End),Vars),
         printSolution(Tasks,StartTimes,1,End).
         
 printSolution(_,[], _,End):- write('End time is: '), write(End), nl.
 printSolution(Tasks,[H|T], I,End) :-
-        getTask(Tasks,I,task(I,_,Dur,Machine)),
+        getTask(Tasks,I,task(I,_,Dur,Machine,HumanRef)),
         EndTask #= H + Dur,
         write('Task '), write(I), write(' starts at '),
-        write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine),
+        write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine), write('; human id - '), write(HumanRef),
         nl, Y #= I+1, printSolution(Tasks,T, Y,End). 
