@@ -2,14 +2,23 @@
 :- use_module(library(lists)).
 
 %---------------------------------------------FACTS------------------------------------
-%machines: [machine(id,TaskType1,ListOfHumansThatCanOperate)]
+%machines: [machine(id,TaskType1,ListOfHumansThatCanOperate),...]
 machines([machine(1,type1,[1,4]),machine(2,type2,[0])]).
+machines2([machine(1,type1,[1]),machine(2,type2,[1])]).
+machines3([machine(1,type1,[0]),machine(2,type2,[1,3]),machine(3,type3,[2,4]),machine(4,type4,[2,3]),machine(5,type1,[0]),machine(6,type1,[0])]).
 
 %tasks: [task(id,TypeId,Duration,MachineRef,HumanRef),...]
 tasks([task(1,type1,10,_,_),task(2,type1,5,_,_),task(3,type2,4,_,_),task(4,type1,2,_,_),task(5,type2,3,_,_)]).
+tasks2([task(1,type1,5,_,_),task(2,type2,3,_,_),task(3,type1,7,_,_),task(4,type2,5,_,_)]).
+tasks3([task(1,type3,2,_,_),task(2,type1,5,_,_),task(3,type2,7,_,_),task(4,type2,4,_,_),task(5,type3,3,_,_),task(6,type4,10,_,_),
+       task(7,type4,13,_,_),task(8,type1,6,_,_),task(9,type2,9,_,_),task(10,type3,8,_,_),task(11,type1,3,_,_),task(12,type6,2,_,_),
+       task(13,type4,5,_,_),task(14,type3,8,_,_),task(15,type3,2,_,_)]).
 
 %operations: [[task1,task3,task2],[task4,task5,task6]),...]
 operations([[1,3,5],[2,4]]).
+operations2([]).
+operations3([[1,6,5],[7,13,3,14]]).
+
 
 %---------------------------------------------CODE------------------------------------
 
@@ -92,7 +101,7 @@ getMachinesAndHumansVars([task(_,_,_,Machine,Human)|T],MachinesAndHumans,Aux):-
 
 getMachinesAndHumansVars([],Machines,Machines).
 
-
+/*
 printWelcome :- write('Welcome to Planta Fabril Project'),nl.
 
 readMachines(Machines,Increment):-
@@ -109,7 +118,24 @@ getData(Tasks,Operations,Machines):-
         readOperations(Operations).
         
 
-start(ST) :- printWelcome, getData(Tasks,Operations,Machines), plantaFabril(Machines,Tasks,Operations,ST).
+start(ST) :- printWelcome, getData(Tasks,Operations,Machines), plantaFabril(Machines,Tasks,Operations,ST).*/
+startEx(ST) :- 
+        machines(M),
+        tasks(T),
+        operations(O),
+        plantaFabril(M, T, O, ST).
+
+startEx2(ST) :- 
+        machines2(M),
+        tasks2(T),
+        operations2(O),
+        plantaFabril(M, T, O, ST).
+
+startEx3(ST) :- 
+        machines3(M),
+        tasks3(T),
+        operations3(O),
+        plantaFabril(M, T, O, ST).
 
 plantaFabril(Machines,Tasks,Operations,StartTimes):-
         length(EndTimes,NumTasks),
