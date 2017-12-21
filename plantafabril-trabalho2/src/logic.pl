@@ -5,7 +5,7 @@
 %machines: [machine(id,TaskType1,ListOfHumansThatCanOperate),...]
 machines([machine(1,type1,[1,4]),machine(2,type2,[0])]).
 machines2([machine(1,type1,[1]),machine(2,type2,[1])]).
-machines3([machine(1,type1,[0]),machine(2,type2,[1,3]),machine(3,type3,[2,4]),machine(4,type4,[2,3]),machine(5,type1,[0]),machine(6,type1,[0])]).
+machines3([machine(1,type1,[0]),machine(2,type2,[0]),machine(3,type3,[2,4]),machine(4,type4,[2,3]),machine(5,type1,[0]),machine(6,type1,[0])]).
 
 %tasks: [task(id,TypeId,Duration,MachineRef,HumanRef),...]
 tasks([task(1,type1,10,_,_),task(2,type1,5,_,_),task(3,type2,4,_,_),task(4,type1,2,_,_),task(5,type2,3,_,_)]).
@@ -152,7 +152,8 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         maximum(End,EndTimes),
         getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
         append(StartTimes,MachinesAndHumans,Vars),
-        labeling(minimize(End),Vars),
+        labeling([minimize(End),time_out(1, Lr)],Vars),
+        write(Lr),nl,
         printSolution(Tasks,StartTimes,1,End).
         
 printSolution(_,[], _,End):- write('End time is: '), write(End), nl.
