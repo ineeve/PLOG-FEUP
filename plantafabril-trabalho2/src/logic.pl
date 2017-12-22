@@ -106,19 +106,23 @@ startEx(ST) :-
         machines(M),
         tasks(T),
         operations(O),
-        plantaFabril(M, T, O, ST).
+        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        write(Lr).
 
 startEx2(ST) :- 
         machines2(M),
         tasks2(T),
         operations2(O),
-        plantaFabril(M, T, O, ST).
+        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        write(Lr).
 
 startEx3(ST) :- 
         machines3(M),
         tasks3(T),
         operations3(O),
-        plantaFabril(M, T, O, ST).
+        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        write(Lr).
+        
 
 plantaFabril(Machines,Tasks,Operations,StartTimes):-
         length(EndTimes,NumTasks),
@@ -136,8 +140,6 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
         append(StartTimes,MachinesAndHumans,Vars),
         labeling([minimize(End)],Vars),
-       /* time_out(labeling([minimize(End)],Vars), 1000, Lr),
-        write(Lr),nl,*/
         printSolution(Tasks,StartTimes,1,End, success).
 
 printSolution(_,_,_,_,time_out):- write('Timed out trying to find solution. Time out is defined in 1second'), nl.        
@@ -147,4 +149,4 @@ printSolution(Tasks,[H|T], I,End, success) :-
         EndTask #= H + Dur,
         write('Task '), write(I), write(' starts at '),
         write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine), write('; human id - '), write(HumanRef),
-        nl, Y #= I+1, printSolution(Tasks,T, Y,End). 
+        nl, Y #= I+1, printSolution(Tasks,T, Y,End,success). 
