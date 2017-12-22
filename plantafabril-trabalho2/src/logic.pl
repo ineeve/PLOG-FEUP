@@ -5,7 +5,7 @@
 %---------------------------------------------FACTS------------------------------------
 %machines: [machine(id,TaskType1,ListOfHumansThatCanOperate),...]
 machines([machine(1,type1,[1,4]),machine(2,type2,[0])]).
-machines2([machine(1,type1,[1]),machine(2,type2,[1])]).
+machines2([machine(1,type1,[1]),machine(2,type2,[0])]).
 machines3([machine(1,type1,[0]),machine(2,type2,[1,3]),machine(3,type3,[2,4]),machine(4,type4,[2,3]),machine(5,type1,[0]),machine(6,type3,[5])]).
 
 %tasks: [task(id,TypeId,Duration,MachineRef,HumanRef),...]
@@ -61,7 +61,8 @@ getTask([_|TT],Id,Task):-
         getTask(TT,Id,Task).
 
 restrictOperations(_,_,[]).
-restrictOperations(Tasks,S,[[_]|ROps]):- restrictOperations(Tasks,S,ROps).
+restrictOperations(_,_,[[]]).
+restrictOperations(Tasks,S,[[_]|ROps]):- restrictOperations(Tasks,S,[ROps]).
 restrictOperations(Tasks,S, [[Task1Id, Task2Id|R]|ROps]):-
         getTask(Tasks,Task1Id,task(Task1Id,_,Dur1,_,_)),
         element(Task1Id,S,ST1),
@@ -135,10 +136,10 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         maximum(End,EndTimes),
         getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
         append(StartTimes,MachinesAndHumans,Vars),
-        labeling([minimize(End)],Vars),
-       /* time_out(labeling([minimize(End)],Vars), 1000, Lr),
-        write(Lr),nl,*/
-        printSolution(Tasks,StartTimes,1,End, success).
+        %labeling([minimize(End)],Vars),
+        time_out(labeling([minimize(End)],Vars), 15000, Lr),
+        write(Lr),nl,
+        printSolution(Tasks,StartTimes,1,End, Lr).
 
 printSolution(_,_,_,_,time_out):- write('Timed out trying to find solution. Time out is defined in 1second'), nl.        
 printSolution(_,[], _,End, success):- write('End time is: '), write(End), nl.
@@ -147,4 +148,4 @@ printSolution(Tasks,[H|T], I,End, success) :-
         EndTask #= H + Dur,
         write('Task '), write(I), write(' starts at '),
         write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine), write('; human id - '), write(HumanRef),
-        nl, Y #= I+1, printSolution(Tasks,T, Y,End). 
+        nl, Y #= I+1, printSolution(Tasks,T, Y,End, success). 
