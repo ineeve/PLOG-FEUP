@@ -107,21 +107,21 @@ startEx(ST) :-
         machines(M),
         tasks(T),
         operations(O),
-        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        time_out(plantaFabril(M, T, O, ST), 16000, Lr),
         write(Lr).
 
 startEx2(ST) :- 
         machines2(M),
         tasks2(T),
         operations2(O),
-        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        time_out(plantaFabril(M, T, O, ST), 16000, Lr),
         write(Lr).
 
 startEx3(ST) :- 
         machines3(M),
         tasks3(T),
         operations3(O),
-        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        time_out(plantaFabril(M, T, O, ST), 16000, Lr),
         write(Lr).
         
 
@@ -140,12 +140,11 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         maximum(End,EndTimes),
         getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
         append(StartTimes,MachinesAndHumans,Vars),
-        %labeling([minimize(End)],Vars),
         time_out(labeling([minimize(End)],Vars), 15000, Lr),
         write(Lr),nl,
         printSolution(Tasks,StartTimes,1,End, Lr).
 
-printSolution(_,_,_,_,time_out):- write('Timed out trying to find solution. Time out is defined in 1second'), nl.        
+printSolution(_,_,_,_,time_out):- write('Timed out trying to find solution. Time out is at 15 seconds'), nl.        
 printSolution(_,[], _,End, success):- write('End time is: '), write(End), nl.
 printSolution(Tasks,[H|T], I,End, success) :-
         getTask(Tasks,I,task(I,_,Dur,Machine,HumanRef)),
