@@ -107,19 +107,23 @@ startEx(ST) :-
         machines(M),
         tasks(T),
         operations(O),
-        plantaFabril(M, T, O, ST).
+        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        write(Lr).
 
 startEx2(ST) :- 
         machines2(M),
         tasks2(T),
         operations2(O),
-        plantaFabril(M, T, O, ST).
+        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        write(Lr).
 
 startEx3(ST) :- 
         machines3(M),
         tasks3(T),
         operations3(O),
-        plantaFabril(M, T, O, ST).
+        time_out(plantaFabril(M, T, O, ST), 1000, Lr),
+        write(Lr).
+        
 
 plantaFabril(Machines,Tasks,Operations,StartTimes):-
         length(EndTimes,NumTasks),
