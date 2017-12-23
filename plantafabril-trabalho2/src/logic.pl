@@ -172,7 +172,7 @@ plantaFabril(Machines,Tasks,Operations,StartTimes,End,Timeout,Flag):-
 printSolution(_,[], _,End):- write('End time is: '), write(End), nl.
 printSolution(Tasks,[H|T], I,End) :-
         getTask(Tasks,I,task(I,_,Dur,Machine,HumanRef)),
-        EndTask #= H + Dur,
+        EndTask is H + Dur,
         write('Task '), write(I), write(' starts at '),
         write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine), write('; human id - '), write(HumanRef),
         nl, Y #= I+1, printSolution(Tasks,T, Y,End). 
