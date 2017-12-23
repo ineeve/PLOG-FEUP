@@ -4,21 +4,26 @@
 
 %---------------------------------------------FACTS------------------------------------
 %machines: [machine(id,TaskType1,ListOfHumansThatCanOperate),...]
-machines([machine(1,type1,[1,4]),machine(2,type2,[0])]).
-machines2([machine(1,type1,[1]),machine(2,type2,[0])]).
-machines3([machine(1,type1,[0]),machine(2,type2,[1,3]),machine(3,type3,[2,4]),machine(4,type4,[2,3]),machine(5,type1,[0]),machine(6,type3,[5])]).
+machines1([machine(1,type1,[1]),machine(2,type2,[0])]).
+machines2([machine(1,type1,[1,4]),machine(2,type2,[0]),machine(3,type3,[1,2,3])]).
+machines3([machine(1,type1,[1]),machine(2,type2,[0]),machine(3,type3,[2,3]), machine(4,type4,[1,2,4])]).
+machines4([machine(1,type1,[0]),machine(2,type2,[1,3]),machine(3,type3,[2,4]),machine(4,type4,[2,3]),machine(5,type1,[0]),machine(6,type3,[5])]).
 
 %tasks: [task(id,TypeId,Duration,MachineRef,HumanRef),...]
-tasks([task(1,type1,10,_,_),task(2,type1,5,_,_),task(3,type2,4,_,_),task(4,type1,2,_,_),task(5,type2,3,_,_)]).
-tasks2([task(1,type1,5,_,_),task(2,type2,3,_,_),task(3,type1,7,_,_),task(4,type2,5,_,_)]).
-tasks3([task(1,type3,2,_,_),task(2,type1,5,_,_),task(3,type2,7,_,_),task(4,type2,4,_,_),task(5,type3,3,_,_),task(6,type4,10,_,_),
+tasks1([task(1,type1,5,_,_),task(2,type2,3,_,_),task(3,type1,7,_,_)]).
+tasks2([task(1,type1,10,_,_),task(2,type3,5,_,_),task(3,type2,4,_,_),task(4,type1,2,_,_),task(5,type2,3,_,_)]).
+tasks3([task(1,type1,3,_,_),task(2,type2,1,_,_),task(3,type3,5,_,_),task(4,type4,8,_,_),task(5,type2,4,_,_),task(6,type3,8,_,_),
+       task(7,type1,3,_,_),task(8,type4,7,_,_),task(9,type3,3,_,_),task(10,type1,2,_,_)]).
+tasks4([task(1,type3,2,_,_),task(2,type1,5,_,_),task(3,type2,7,_,_),task(4,type2,4,_,_),task(5,type3,3,_,_),task(6,type4,10,_,_),
        task(7,type4,13,_,_),task(8,type1,6,_,_),task(9,type2,9,_,_),task(10,type3,8,_,_),task(11,type3,3,_,_),task(12,type2,2,_,_),
        task(13,type4,5,_,_),task(14,type3,8,_,_),task(15,type3,2,_,_)]).
 
 %operations: [[task1,task3,task2],[task4,task5,task6]),...]
-operations([[1,3,5],[2,4]]).
-operations2([]).
-operations3([[1,6,5],[7,13,3,14]]).
+operations1([[1],[2],[3]]).
+operations2([[1,3,5],[2,4]]).
+operations3([[1,2],[3,4,5],[9,7,6],[8,10]]).
+operations4([[1,2,3,4,5,6],[7,8,9,10,11,12],[13,14,15]]).
+operations5([[1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15]]).
 
 
 %---------------------------------------------CODE------------------------------------
@@ -60,15 +65,16 @@ getTask([task(Id,Type,Duration,Machine,Human)|_],Id,task(Id,Type,Duration,Machin
 getTask([_|TT],Id,Task):-
         getTask(TT,Id,Task).
 
-restrictOperations(_,_,[]).
-restrictOperations(_,_,[[]]).
-restrictOperations(Tasks,S,[[_]|ROps]):- restrictOperations(Tasks,S,[ROps]).
 restrictOperations(Tasks,S, [[Task1Id, Task2Id|R]|ROps]):-
         getTask(Tasks,Task1Id,task(Task1Id,_,Dur1,_,_)),
         element(Task1Id,S,ST1),
         element(Task2Id,S,ST2),
         ST1+Dur1 #=< ST2,
         restrictOperations(Tasks,S, [[Task2Id|R]|ROps]).
+restrictOperations(Tasks,S,[[_]|ROps]):- restrictOperations(Tasks,S,ROps).
+restrictOperations(_,_,[[]]).
+restrictOperations(_,_,[]).
+
 
 sumDurations([task(_,_,Dur1,_,_)|Others],Sum,Accumulator):-
         Accumulator2 is Accumulator + Dur1,
@@ -108,10 +114,10 @@ start(Machines,Tasks,Operations,Timeout,Flag):-
         printSolution(Tasks,ST,1,End).
         
 
-startEx(ST,Flag) :- 
-        machines(M),
-        tasks(T),
-        operations(O),
+startEx1(ST,Flag) :- 
+        machines1(M),
+        tasks1(T),
+        operations1(O),
         plantaFabril(M, T, O, ST,End,16000,Flag),
         printSolution(T,ST,1,End).
 
@@ -122,11 +128,19 @@ startEx2(ST,Flag) :-
         plantaFabril(M, T, O, ST,End,16000,Flag),
         printSolution(T,ST,1,End).
 
-startEx3(ST,Flag) :- 
-        machines3(M),
-        tasks3(T),
-        operations3(O),
-        plantaFabril(M, T, O, ST,End,1000,Flag),
+startEx4(ST,Flag) :- 
+        machines4(M),
+        tasks4(T),
+        operations4(O),
+        plantaFabril(M, T, O, ST,End,16000,Flag),
+        printSolution(T,ST,1,End).
+
+
+startEx5(ST,Flag) :- 
+        machines4(M), %it uses machines4 and tasks4 on purpose
+        tasks4(T),
+        operations5(O),
+        plantaFabril(M, T, O, ST,End,16000,Flag),
         printSolution(T,ST,1,End).
         
 
