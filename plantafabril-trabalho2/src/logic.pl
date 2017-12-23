@@ -103,29 +103,34 @@ getMachinesAndHumansVars([task(_,_,_,Machine,Human)|T],MachinesAndHumans,Aux):-
 
 getMachinesAndHumansVars([],Machines,Machines).
 
-startEx(ST) :- 
+start(Machines,Tasks,Operations,Timeout,Flag):-
+        plantaFabril(Machines,Tasks,Operations,ST,End,Timeout,Flag),
+        printSolution(Tasks,ST,1,End).
+        
+
+startEx(ST,Flag) :- 
         machines(M),
         tasks(T),
         operations(O),
-        time_out(plantaFabril(M, T, O, ST), 16000, Lr),
-        write(Lr).
+        plantaFabril(M, T, O, ST,End,16000,Flag),
+        printSolution(T,ST,1,End).
 
-startEx2(ST) :- 
+startEx2(ST,Flag) :- 
         machines2(M),
         tasks2(T),
         operations2(O),
-        time_out(plantaFabril(M, T, O, ST), 16000, Lr),
-        write(Lr).
+        plantaFabril(M, T, O, ST,End,16000,Flag),
+        printSolution(T,ST,1,End).
 
-startEx3(ST) :- 
+startEx3(ST,Flag) :- 
         machines3(M),
         tasks3(T),
         operations3(O),
-        time_out(plantaFabril(M, T, O, ST), 16000, Lr),
-        write(Lr).
+        plantaFabril(M, T, O, ST,End,1000,Flag),
+        printSolution(T,ST,1,End).
         
 
-plantaFabril(Machines,Tasks,Operations,StartTimes):-
+plantaFabril(Machines,Tasks,Operations,StartTimes,End,Timeout,Flag):-
         length(EndTimes,NumTasks),
         length(Tasks,NumTasks),
         length(StartTimes,NumTasks),
@@ -140,15 +145,13 @@ plantaFabril(Machines,Tasks,Operations,StartTimes):-
         maximum(End,EndTimes),
         getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
         append(StartTimes,MachinesAndHumans,Vars),
-        time_out(labeling([minimize(End)],Vars), 15000, Lr),
-        write(Lr),nl,
-        printSolution(Tasks,StartTimes,1,End, Lr).
+        labeling([minimize(End),time_out(Timeout,Flag)],Vars),
+        fd_statistics.
 
-printSolution(_,_,_,_,time_out):- write('Timed out trying to find solution. Time out is at 15 seconds'), nl.        
-printSolution(_,[], _,End, success):- write('End time is: '), write(End), nl.
-printSolution(Tasks,[H|T], I,End, success) :-
+printSolution(_,[], _,End):- write('End time is: '), write(End), nl.
+printSolution(Tasks,[H|T], I,End) :-
         getTask(Tasks,I,task(I,_,Dur,Machine,HumanRef)),
         EndTask #= H + Dur,
         write('Task '), write(I), write(' starts at '),
         write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine), write('; human id - '), write(HumanRef),
-        nl, Y #= I+1, printSolution(Tasks,T, Y,End, success). 
+        nl, Y #= I+1, printSolution(Tasks,T, Y,End). 
