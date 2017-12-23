@@ -147,7 +147,7 @@ startEx5(ST,Flag) :-
         machines4(M), %it uses machines4 and tasks4 on purpose
         tasks4(T),
         operations5(O),
-        plantaFabril(M, T, O, ST,End,35000,Flag),
+        plantaFabril(M, T, O, ST,End,1000,Flag),
         printSolution(T,ST,1,End).
         
 
@@ -166,13 +166,15 @@ plantaFabril(Machines,Tasks,Operations,StartTimes,End,Timeout,Flag):-
         maximum(End,EndTimes),
         getMachinesAndHumansVars(Tasks,MachinesAndHumans,[]),
         append(StartTimes,MachinesAndHumans,Vars),
-        labeling([minimize(End),time_out(Timeout,Flag)],Vars),
-        fd_statistics.
+        labeling([minimize(End),time_out(Timeout,Flag)],Vars).
+        %fd_statistics.
 
 printSolution(_,[], _,End):- write('End time is: '), write(End), nl.
 printSolution(Tasks,[H|T], I,End) :-
         getTask(Tasks,I,task(I,_,Dur,Machine,HumanRef)),
-        EndTask #= H + Dur,
+        EndTask is H + Dur,
         write('Task '), write(I), write(' starts at '),
-        write(H), write(' ends at '), write(EndTask), write('; Done on machine - '), write(Machine), write('; human id - '), write(HumanRef),
-        nl, Y #= I+1, printSolution(Tasks,T, Y,End). 
+        write(H), write(' ends at '), write(EndTask), 
+        write('; Done on machine - '), write(Machine), 
+        write('; human id - '), write(HumanRef),
+        nl, Y is I+1, printSolution(Tasks,T, Y,End). 
