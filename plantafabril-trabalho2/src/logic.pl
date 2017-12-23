@@ -23,7 +23,7 @@ operations1([[1],[2],[3]]).
 operations2([[1,3,5],[2,4]]).
 operations3([[1,2],[3,4,5],[9,7,6],[8,10]]).
 operations4([[1,2,3,4,5,6],[7,8,9,10,11,12],[13,14,15]]).
-operations5([[1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15]]).
+operations5([[1,2,3],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15]]).
 
 
 %---------------------------------------------CODE------------------------------------
@@ -128,6 +128,13 @@ startEx2(ST,Flag) :-
         plantaFabril(M, T, O, ST,End,16000,Flag),
         printSolution(T,ST,1,End).
 
+startEx3(ST,Flag) :- 
+        machines3(M),
+        tasks3(T),
+        operations3(O),
+        plantaFabril(M, T, O, ST,End,16000,Flag),
+        printSolution(T,ST,1,End).
+
 startEx4(ST,Flag) :- 
         machines4(M),
         tasks4(T),
@@ -140,7 +147,7 @@ startEx5(ST,Flag) :-
         machines4(M), %it uses machines4 and tasks4 on purpose
         tasks4(T),
         operations5(O),
-        plantaFabril(M, T, O, ST,End,16000,Flag),
+        plantaFabril(M, T, O, ST,End,35000,Flag),
         printSolution(T,ST,1,End).
         
 
